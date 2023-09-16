@@ -1,17 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Script.BuffLogic;
 using Script.Data;
 using Script.Enums;
 using Script.Event;
 using Script.InteractLogic;
-using Script.Tools;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Action = Script.ActionLogic.Action;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
@@ -361,12 +356,12 @@ namespace Script.Objects
             return false;
         }
         
-        protected void SetTarget(BaseObject target, bool AoE = false)
+        protected void SetTarget(BaseObject target, bool AoE = false, bool friendly = false)
         {
             if (AoE)
             {
                 _target = null;
-                movingTargetPosition = Data.Path == PathType.None
+                movingTargetPosition = friendly
                     ? GM.FriendlyCenter.transform.position
                     : GM.EnemyCenter.transform.position;
             }

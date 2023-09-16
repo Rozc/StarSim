@@ -31,7 +31,7 @@ namespace Script.Characters
                 Debug.LogError( "Clara Get Action Error: Not My Action! Actor ID: " + action.Actor.Position + " My ID: " + Position);
                 return;
             }
-            if (action.ActionType == ActionType.Followup) // 由于接收到追加行动后会立即执行，因此这里不需要保存行动 BUG 由于 DoAction 是从 _currentAction 里拿行动信息的，因此还是要保存
+            if (action.ActionType == ActionType.Followup)
             {
                 _currentAction = action;
                 Counter();

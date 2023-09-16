@@ -667,7 +667,7 @@ GameObject:
   m_Component:
   - component: {fileID: 949197282}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: EnemyCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1444,7 +1444,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1908942970}
   m_Layer: 0
-  m_Name: Friendly
+  m_Name: FriendlyCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
