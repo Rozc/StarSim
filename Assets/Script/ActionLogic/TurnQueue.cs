@@ -8,6 +8,7 @@ using Script.Objects;
 using UnityEditor.IMGUI.Controls;
 using UnityEditor.Experimental.GraphView;
 
+// TODO 将 Position 改成 CharaterID 实现
 namespace Tools
 {
     // ���ļ��������ж�������
@@ -34,7 +35,7 @@ namespace Tools
         {
             LinkedListNode<BaseObject> newNode = new(obj); // �½��ڵ�
             _list.AddLast(newNode); // ���ڵ���ӵ�����β��
-            _dict[obj.Position] = newNode; // ���ڵ���ӵ��ֵ�
+            _dict[obj.Data.CharacterID] = newNode; // ���ڵ���ӵ��ֵ�
             Advance(newNode);
         }
 
@@ -168,7 +169,7 @@ namespace Tools
             Dictionary<int, int> dict = new Dictionary<int, int>();
             foreach (var item in _list)
             {
-                dict.Add(item.Position, item.ActionValue);
+                dict.Add(item.Data.CharacterID, item.ActionValue);
             }
             return dict;
         }

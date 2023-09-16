@@ -15,6 +15,7 @@ public class GameManager : SingletonBase<GameManager>
 {
 
     public Dictionary<int, BaseObject> ObjDict; // <ID, Object>
+    public Dictionary<int, BaseObject> PosDict; // <Position, Object>
     public List<Friendly> FriendlyObjects;
     public List<Enemy> EnemyObjects;
     public GameObject FriendlyCenter;
@@ -23,32 +24,33 @@ public class GameManager : SingletonBase<GameManager>
     private CursorController TargetCursor;
     private UIController UI;
     private EventCenter EC;
+    
     private TurnQueue _turnQ;
     private ActionQueue _actionQ;
 
-    public GMStatus State = GMStatus.BeforeInit;
+    private GMStatus _state = GMStatus.BeforeInit;
     private BaseObject _currentTurnOf;
     private BaseObject _currentActionOf;
     private Action _currentAction;
     
     private int _currentUAID;
-    public int CurrentTargetID { get; private set; }
-    public BaseObject CurrentTarget => ObjDict[CurrentTargetID];
+    public BaseObject CurrentTarget => PosDict[TargetCursor.CurrentPosition];
 
 
     private void Initialize()
     {
-        if (State != GMStatus.BeforeInit)
+        if (_state != GMStatus.BeforeInit)
         {
             Debug.Log("Logic Error: Unexpected Message, Battle Already Started.");
             return;
         }
-        State = GMStatus.Idle;
+        _state = GMStatus.Idle;
 
         FriendlyCenter = GameObject.Find("FriendlyCenter");
         EnemyCenter = GameObject.Find("EnemyCenter");
 
         ObjDict = new Dictionary<int, BaseObject>();
+        PosDict = new Dictionary<int, BaseObject>();
         FriendlyObjects = new List<Friendly>();
         EnemyObjects = new List<Enemy>();
         BaseObject[] objs = UnityEngine.Object.FindObjectsOfType<BaseObject>();
@@ -59,6 +61,7 @@ public class GameManager : SingletonBase<GameManager>
         UI = GameObject.Find("UIDocument").GetComponent<UIController>();
         EC = EventCenter.Instance;
         TargetCursor = UnityEngine.Object.FindObjectOfType<CursorController>();
+        
 
         foreach (var obj in objs)
         {
@@ -72,13 +75,13 @@ public class GameManager : SingletonBase<GameManager>
                     break;
             }
 
-            ObjDict.Add(obj.Position, obj);
+            ObjDict.Add(obj.Data.CharacterID, obj);
+            PosDict.Add(obj.Position, obj);
         }
         UI.SetInteractable(ButtonID.BattleStart, false);
-        
+        TargetCursor.Initialize();
         
         // 这里可以处理一些秘技等战斗初始化动作
-        CurrentTargetID = 5;
         
         BattleInit();
     }
@@ -126,21 +129,22 @@ public class GameManager : SingletonBase<GameManager>
     {
         Debug.Log("Into Action of " + _actionQ.Top().Actor.BaseData.Name);
         Action action = _actionQ.Top();
-        _currentActionOf = ObjDict[action.Actor.Position];
+        _currentActionOf = ObjDict[action.Actor.Data.CharacterID];
         AdjustButtonAndCursor();
         UI.UpdateActorName();
         UI.UpdateActQLabel();
-        State = GMStatus.WaitingAct;
+        _state = GMStatus.WaitingAct;
         // return action;
         _currentActionOf.GetAction(action);
     }
     private void ActionDone()
     {
-        if (State != GMStatus.WaitingActDone)
+        if (_state != GMStatus.WaitingActDone)
         {
             Debug.LogError("Logic Error: Unexpected Message, GM is not Waiting for ActionDone");
             return;
         }
+        // 检测游戏是否结束
         UI.UpdateActorName();
         UI.UpdateActQLabel();
         // 如果是主行动结束，那就要更新回合队列
@@ -153,7 +157,7 @@ public class GameManager : SingletonBase<GameManager>
         ClearCurrentObject();
         if (_actionQ.Count > 0)
         {
-            State = GMStatus.Idle;
+            _state = GMStatus.Idle;
             NextAction();
             return;
         }
@@ -166,11 +170,11 @@ public class GameManager : SingletonBase<GameManager>
     private void TurnEnd()
     {
         Console.WriteLine("In TurnEnd()");
-        State = GMStatus.Idle; // �� GM ״̬��Ϊ����
+        _state = GMStatus.Idle; // �� GM ״̬��Ϊ����
         NextTurn();
     }
 
-    // ===================================== ����Ϊ������Ϣ���ݵ� Public ���� =====================================
+    // ===================================== Public 消息方法 =====================================
 
     public void GetInputFromUI(KeyCode input)
     {
@@ -222,9 +226,9 @@ public class GameManager : SingletonBase<GameManager>
             return FriendlyObjects[Random.Range(0, FriendlyObjects.Count)];
         }
     }
-    public BaseObject GetObjectByID(int id)
+    public BaseObject GetObjectByPosition(int pos)
     {
-        return ObjDict[id];
+        return PosDict[pos];
     }
     public void GetMessageFromActor(Message msg, int SenderID = -1)
     {
@@ -235,14 +239,20 @@ public class GameManager : SingletonBase<GameManager>
         switch (msg)
         {
             case Message.ActionPrepared:
-                State = GMStatus.WaitingActDone;
+                _state = GMStatus.WaitingActDone;
                 _currentAction = _actionQ.Pop();
                 break;
             case Message.ActionDone:
                 ActionDone();
                 break;
         }
-
+    }
+    public void AdjustCursor(TargetForm form)
+    {
+        // AoE: 在所有目标身上生成光标
+        // Blast: 在当前目标身上生成光标, 并在其两侧目标上生成一个较小的光标
+        // Single: 在当前目标身上生成光标
+        
     }
 
     public int RequireExtraAction(Action action)
@@ -255,7 +265,7 @@ public class GameManager : SingletonBase<GameManager>
 
         action.UAID = _currentUAID;
         _currentUAID++;
-        if (_actionQ.Push(action) && State == GMStatus.WaitingAct)
+        if (_actionQ.Push(action) && _state == GMStatus.WaitingAct)
         {
             Debug.Log("额外行动插入，现行动打断，执行额外行动");
             _currentActionOf.GetMessageFromGM(Message.Interrupt);
@@ -275,7 +285,7 @@ public class GameManager : SingletonBase<GameManager>
         string str = "";
         foreach (var item in dict)
         {
-            str += ObjDict[item.Key].BaseData.Name + " <=> " + item.Value + "\r\n";
+            str += ObjDict[item.Key].Data.Name + " <=> " + item.Value + "\r\n";
         }
         return str;
     }
@@ -289,38 +299,19 @@ public class GameManager : SingletonBase<GameManager>
 
     private void TryFriendlyUltimate(int id)
     {
-        (ObjDict[id] as Friendly).AskUltimate();
+        (PosDict[id] as Friendly).AskUltimate();
     }
     private void TryMoveCursor(KeyCode k)
     {
         if (!TargetCursor.Visible) return;
-        if (k == KeyCode.A)
+        switch (k)
         {
-            if (CurrentTargetID <= 5)
-            {
-                // �Ѿ����������
-                // 
-                return;
-            }
-            else
-            {
-                CurrentTargetID--;
+            case KeyCode.A:
                 TargetCursor.Move(-1);
-            }
-        }
-        else if (k == KeyCode.D)
-        {
-            if (CurrentTargetID >= 5 + EnemyObjects.Count - 1)
-            {
-                // �Ѿ������ұ���
-                return;
-            }
-            else
-            {
-                CurrentTargetID++;
+                break;
+            case KeyCode.D:
                 TargetCursor.Move(1);
-            }
-
+                break;
         }
     }
     private void ClearCurrentObject()

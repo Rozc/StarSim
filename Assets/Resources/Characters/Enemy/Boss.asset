@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50806cf6efd6d6644be9e115fc9d60ea, type: 3}
   m_Name: Boss
   m_EditorClassIdentifier: 
-  <CharacterID>k__BackingField: 0
+  <CharacterID>k__BackingField: 50000
   <Name>k__BackingField: Boss
   <Level>k__BackingField: 90
   <BattleType>k__BackingField: 0

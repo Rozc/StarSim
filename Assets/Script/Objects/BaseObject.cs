@@ -21,6 +21,7 @@ namespace Script.Objects
         
         // Realtime Data
         public RealtimeData Data { get; private set; }
+        [field: SerializeField] public bool isAlive = true;
         [field: SerializeField] protected List<Buff> BuffList; // 用 Dict 可能性能更好，但是为了在 Inspector 里方便查看，还是用 List 吧
         [field: SerializeField] protected List<Buff> DoTList;
         [field: SerializeField] protected List<Buff> CtrlList;

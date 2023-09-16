@@ -2,6 +2,7 @@ using System;
 using Script.Data.ActionData;
 using Script.Data;
 using Script.Enums;
+using Script.InteractLogic;
 using Script.Tools;
 using Tools;
 using UnityEngine;
@@ -26,13 +27,17 @@ namespace Script.Objects
             UI.SetInteractable(ButtonID.BasicAttack, false);
         }
 
-        // 默认实现占位符，请勿使用，没做 ActionDetail
+        
         protected virtual void BasicAttack()
         {
             SetTarget(GM.CurrentTarget);
+            ActionDetail ad = new ActionDetail(this, _target, BasicAttackData);
             GM.GetMessageFromActor(Message.ActionPrepared);
+            IM.Process(ad);
             DoAction(SkillType.Attack, TargetForm.Single);
         }
+        
+        // 默认实现占位符，请勿使用，没做 ActionDetail
         protected virtual void SkillAttack()
         {
             SetTarget(GM.CurrentTarget);
@@ -43,7 +48,7 @@ namespace Script.Objects
         {
             SetTarget(GM.CurrentTarget);
             GM.GetMessageFromActor(Message.ActionPrepared);
-            DoAction(SkillType.Attack, TargetForm.Aoe);
+            DoAction(SkillType.Attack, TargetForm.AoeEnemy);
         }
 
         public void AskUltimate()

@@ -220,9 +220,9 @@ Done Aoe 目标选择
 Doing Buff CallBack
 开始做第三个角色：Bronya
 
-```
+```text
 新建一个角色必须重载的函数
-1. BasicAttack
+1. BasicAttack // 这个也可以不做, 如果默认的普攻实现可以满足需求的话
 2. SkillAttack
 3. Ultimate
 新建一个角色可以重载的函数
@@ -233,4 +233,17 @@ Doing Buff CallBack
 8. OnMainActionEnd, 若需要在自己的主回合结束阶段执行逻辑,则需要重载, *必须*在函数中调用 base.OnMainActionEnd() 以执行默认逻辑, 因为其中包含了与 Buff 结算相关的逻辑
 9. OnActionEnd, 若需要在自己的额外行动结束阶段执行逻辑, 则需要重载, 无默认逻辑
 10. OnTurnEnd, 若需要在自己的回合结束阶段执行逻辑, 则需要重载, *必须*在函数中调用 base.OnTurnEnd() 以执行默认逻辑, 因为其中包含了事件逻辑
+```
+根据对布洛妮娅的测试, 其终结技施加的 Buff 基于其 "固定暴击伤害" (要不然就滚雪球了), 或者也有可能是施放时的 实时暴击伤害
+根据对停云的测试, 其战技施加的 Buff 基于施放时的 实时攻击力, 此后若不更新 Buff (也就是重新上一个), 其数值不再改变, 也就是快照机制
+
+Doing 选择己方目标
+
+```text
+己方目标 Position 范围: 1~4
+敌方目标 Position 范围: 6~10
+之所以 5 和 11 不用是因为这样在 Cursor 移动的时候不用做额外判断
+之后如果有非场上目标的话就用 12 往后
+
+把 AoE 拆分成 AoeFriendly 和 AoeEnemy
 ```
