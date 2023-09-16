@@ -1,3 +1,5 @@
+using Script.Enums;
+using Script.InteractLogic;
 using Script.Objects;
 
 namespace Script.Characters
@@ -14,7 +16,12 @@ namespace Script.Characters
             // 先上 Buff
             // 然后解除负面效果
             // 最后使目标立即行动
-            base.SkillAttack();
+            SetTarget(GM.PosDict[1]);
+            ActionDetail ad = new ActionDetail(this, _target, SkillAttackData);
+            GM.GetMessageFromActor(Message.ActionPrepared);
+            IM.Process(ad);
+            // 拉条
+            DoAction(SkillType.Enhance, TargetForm.Single);
         }
 
         protected override void Ultimate()

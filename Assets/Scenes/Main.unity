@@ -128,11 +128,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8318039291929031294, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
   m_PrefabInstance: {fileID: 1263712184}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &480730894 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8639612647966957036, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
-  m_PrefabInstance: {fileID: 4840138933638164558}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &662337557 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1470077304936829578, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
@@ -792,46 +787,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Luocha
       objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Data
-      value: 
-      objectReference: {fileID: 11400000, guid: 04233761221238a44999187eaa6f7061, type: 2}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: ActID
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: _ActID
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_Name
-      value: Luocha
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_Speed
-      value: 121
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_TargetObject
-      value: 
-      objectReference: {fileID: 480730894}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <ID>k__BackingField
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <Data>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: fbedc1b0b4875e0419b55ff8ff01fa8e, type: 2}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <BaseData>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: fbedc1b0b4875e0419b55ff8ff01fa8e, type: 2}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <Position>k__BackingField
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 8264874180195879717, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -876,13 +831,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
 --- !u!4 &1104334700 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8264874180195879717, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
   m_PrefabInstance: {fileID: 1104334699}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1104334705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662337557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 461de8269c2243028085ff3037c1a8af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <BaseData>k__BackingField: {fileID: 11400000, guid: fbedc1b0b4875e0419b55ff8ff01fa8e, type: 2}
+  isAlive: 1
+  BuffList: []
+  DoTList: []
+  CtrlList: []
+  <Position>k__BackingField: 2
+  _currentAction:
+    UAID: 0
+    Actor: {fileID: 0}
+    ActionType: 0
+    Priority: 0
+    Insertable: 0
+    NeedInput: 0
+    ExtraActCode: 0
+  MovingState: 0
+  Distance: 0
+  <BasicAttackData>k__BackingField: {fileID: 11400000, guid: 1cbdf53c58a92f945bdf0faf7c45fccc, type: 2}
+  <SkillAttackData>k__BackingField: {fileID: 0}
+  <UltimateData>k__BackingField: {fileID: 0}
+  CommandState: 0
 --- !u!4 &1145393754 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8318039291929031294, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
@@ -1066,46 +1054,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bronya
       objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Data
-      value: 
-      objectReference: {fileID: 11400000, guid: 8c825db47a14bcb4185ca8770f3356bb, type: 2}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: ActID
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: _ActID
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_Name
-      value: Gepard
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_Speed
-      value: 104
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_TargetObject
-      value: 
-      objectReference: {fileID: 480730894}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <ID>k__BackingField
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <Data>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: 02aad0ad6bb25ec43966b37336a2ab20, type: 2}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <BaseData>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: 02aad0ad6bb25ec43966b37336a2ab20, type: 2}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <Position>k__BackingField
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 8264874180195879717, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1150,14 +1098,45 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7086664298036780644, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
 --- !u!4 &1342126299 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8264874180195879717, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
   m_PrefabInstance: {fileID: 1342126298}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1342126304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 690106075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39192aca4feb41989fb119f266f7ebf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <BaseData>k__BackingField: {fileID: 11400000, guid: 02aad0ad6bb25ec43966b37336a2ab20, type: 2}
+  isAlive: 1
+  BuffList: []
+  DoTList: []
+  CtrlList: []
+  <Position>k__BackingField: 3
+  _currentAction:
+    UAID: 0
+    Actor: {fileID: 0}
+    ActionType: 0
+    Priority: 0
+    Insertable: 0
+    NeedInput: 0
+    ExtraActCode: 0
+  MovingState: 0
+  Distance: 0
+  <BasicAttackData>k__BackingField: {fileID: 11400000, guid: 9986ada4d6b45bc4ca470ca9496867b2, type: 2}
+  <SkillAttackData>k__BackingField: {fileID: 11400000, guid: e937d56d148822c40913239b517a7b69, type: 2}
+  <UltimateData>k__BackingField: {fileID: 11400000, guid: b9929ee8b19469d43bf8176de2eb5942, type: 2}
+  CommandState: 0
 --- !u!1001 &1495505093
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1169,30 +1148,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Qingque
       objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: ActID
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: _ActID
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_Name
-      value: Seele
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_Speed
-      value: 105
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_TargetObject
-      value: 
-      objectReference: {fileID: 480730894}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <Data>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: 1844d82c507708948af1d89ab1648bfd, type: 2}
     - target: {fileID: 8264874180195879717, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1238,7 +1193,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
 --- !u!4 &1495505094 stripped
 Transform:
@@ -1615,58 +1570,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Clara
       objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Data
-      value: 
-      objectReference: {fileID: 11400000, guid: 6b59024c02c4bf3488d741037fc79c7a, type: 2}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: ActID
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: _ActID
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_Name
-      value: Clara
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_Speed
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_Distance
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: Test_TargetObject
-      value: 
-      objectReference: {fileID: 480730894}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <ID>k__BackingField
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <Data>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: 031263e0fd35f9f44b5ec84a528edfab, type: 2}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <BaseData>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: 031263e0fd35f9f44b5ec84a528edfab, type: 2}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <UltimateData>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: 3e9ea125e2c3f1e41a2d8c0db1143753, type: 2}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <BasicAttackData>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: c7e19f7b6adb6594f879970355c9d6d6, type: 2}
-    - target: {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
-      propertyPath: <SkillAttackData>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: 32226d099a93d87479e168bec6fef775, type: 2}
     - target: {fileID: 8264874180195879717, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1712,5 +1615,5 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 6019809987963155739, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}

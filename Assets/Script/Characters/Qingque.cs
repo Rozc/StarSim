@@ -127,7 +127,6 @@ namespace Script.Characters
 
         public override void GetInputFromManager(KeyCode input)
         {
-            Debug.Log("Qingque Get Input");
             switch (ActType: _currentAction.ActionType, CommandState, input)
             {
                 case (ActionType.Base, CommandStatus.BasicAttack, KeyCode.Q):

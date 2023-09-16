@@ -71,11 +71,14 @@ namespace Tools
                 node = node.Next;
             }
         }
-        public void Update(int id)
+        public void Update(params int[] ids)
         {
-            if (_dict.ContainsKey(id))
+            foreach (var id in ids)
             {
-                Update(_dict[id]);
+                if (_dict.ContainsKey(id))
+                {
+                    Update(_dict[id]);
+                }
             }
         }
         public void Update(LinkedListNode<BaseObject> node)
@@ -184,6 +187,7 @@ namespace Tools
             }
             return str;
         }
+
 
     }
 

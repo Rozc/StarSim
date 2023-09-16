@@ -11,6 +11,7 @@ namespace Script.Enums
         SkillAttack,
         UltimateAttack,
         ObjectOnHit,
-        ObjectOnHeal
+        ObjectOnHeal,
+        ActionValueUpdate
     }
 }

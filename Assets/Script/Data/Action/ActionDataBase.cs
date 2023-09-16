@@ -8,6 +8,7 @@ namespace Script.Data
     {
         [field: SerializeField] public SkillType SkillType { get; private set; }
         [field: SerializeField] public TargetForm TargetForm { get; private set; }
+        [field: SerializeField] public TargetSide TargetSide { get; private set; }
         [field: SerializeField] public BuffData[] BuffDataList { get; private set; }
         [field: SerializeField] public bool RemoveABuff { get; private set; }
         [field: SerializeField] public bool RemoveADebuff { get; private set; }

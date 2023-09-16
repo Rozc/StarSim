@@ -62,6 +62,7 @@ namespace Script.Objects
                 {
                     movingTargetPosition = primitivePosition;
                     MovingState = MovingStatus.MoveReturning;
+                    GM.GetMessageFromActor(Message.InteractDone, Data.CharacterID);
                 }
                 else if (MovingState == MovingStatus.MoveReturning)
                 {
@@ -170,7 +171,7 @@ namespace Script.Objects
         public abstract void GetAction(Action action);
         protected virtual void DoAction(SkillType skillType, TargetForm targetForm)
         {
-            Debug.Log("DoAction() of " 
+            Debug.Log("        DoAction() of " 
                       + BaseData.Name + " | " 
                       + _currentAction.ActionType + " Action | " 
                       + skillType + " Skill | "
@@ -182,7 +183,7 @@ namespace Script.Objects
 
         protected virtual void ActionInterrupt()
         {
-            Debug.Log(BaseData.Name + ": Action Interrupted");
+            Debug.Log("    " + BaseData.Name + ": Action Interrupted");
             _currentAction = null;
         }
 
@@ -194,12 +195,45 @@ namespace Script.Objects
             // 需要将其中每个 Buff 的效果都应用到自己身上
             if (ad.Data.RemoveABuff)
             {
-                
+                // 反向遍历
+                for (int i = BuffList.Count - 1; i >= 0; i--)
+                {
+                    if (BuffList[i].Data.BuffType != BuffType.Buff) continue;
+                    RemoveBuff(BuffList[i]);
+                    break;
+                }
             }
 
             if (ad.Data.RemoveADebuff)
             {
-                
+                // 遍历所有 Debuff，保存第一个找到的
+                // 继续遍历，如果遇到了需要首先被移除的，就替换然后停止遍历，清掉这个 Debuff
+                // 如果遍历完了都没找到需要首先被移除的，就清掉第一个找到的
+                // 反向遍历
+                Buff debuffToRemove = null;
+                bool found = false;
+                for (int i = BuffList.Count - 1; i >= 0; i--)
+                {
+                    if (BuffList[i].Data.BuffType == BuffType.Debuff)
+                    {
+                        if (!found)
+                        {
+                            debuffToRemove = BuffList[i];
+                            found = true;
+                        }
+                        if (BuffList[i].Data.NeedToBeRemovedFirst)
+                        {
+                            debuffToRemove = BuffList[i];
+                            break;
+                        }
+                    }
+                }
+
+                if (found)
+                {
+                    RemoveBuff(debuffToRemove);
+                }
+                    
             }
 
             foreach (var buffID in ad.Data.RemoveTheSpecifiedBuff)
@@ -271,10 +305,23 @@ namespace Script.Objects
             foreach (var s in buff.Data.BuffProperties)
             {
                 var ss = s.Split(':', '%');
-                if (ss.Length >= 2 && ss[0].Trim() != "" && float.TryParse(ss[1], out float value))
+                var propName = ss[0].Trim();
+                if (ss.Length >= 2 && propName != "" && float.TryParse(ss[1], out float value))
                 {
-                    Data.Add(ss[0].Trim(), value * buff.CurrentStack, ss.Length == 3);
-                    Debug.Log(Data.Name + " AddBuff: " + ss[0].Trim() + " " + value + "*" + buff.CurrentStack + " " + (ss.Length == 3 ? "%" : " Fixed") );
+                    if (propName == "Speed") EC.TriggerEvent(EventID.ActionValueUpdate, this);
+                    if (propName == "Distance")
+                    {
+                        // 一般表现为行动提前 %，或行动延后 %，并且即时生效
+                        Distance += (int)(value * 0.01f * Distance) * buff.CurrentStack;
+                        EC.TriggerEvent(EventID.ActionValueUpdate, this);
+                        continue;
+                    }
+                    Data.Add(propName, value * buff.CurrentStack, ss.Length == 3);
+                    Debug.Log("        " + Data.Name 
+                              + " AddBuff: " 
+                              + propName + " " 
+                              + value + "*" + buff.CurrentStack + " " 
+                              + (ss.Length == 3 ? "%" : " Fixed") );
                 }
             }
             BuffList.Add(buff);
@@ -286,10 +333,18 @@ namespace Script.Objects
             foreach (var s in buff.Data.BuffProperties)
             {
                 var ss = s.Split(':', '%');
-                if (ss.Length >= 2 && ss[0].Trim() != "" && float.TryParse(ss[1], out float value))
+                var propName = ss[0].Trim();
+                if (ss.Length >= 2 && propName != "" && float.TryParse(ss[1], out float value))
                 {
-                    Data.Minus(ss[0].Trim(), value * buff.CurrentStack, ss.Length == 3);
-                    Debug.Log(Data.Name + " RemoveBuff: " + ss[0].Trim() + " " + value + "*" + buff.CurrentStack + " " + (ss.Length == 3 ? "%" : " Fixed") );
+                    if (propName == "Speed") EC.TriggerEvent(EventID.ActionValueUpdate, this);
+                    if (propName == "Distance") continue; // 对于距离的改变，改了就不会还了，所以只需要在加 Buff 时处理
+
+                    Data.Minus(propName, value * buff.CurrentStack, ss.Length == 3);
+                    Debug.Log("        " + Data.Name 
+                              + " RemoveBuff: " 
+                              + propName + " " 
+                              + value + "*" + buff.CurrentStack + " " 
+                              + (ss.Length == 3 ? "%" : " Fixed") );
                 }
             }
             BuffList.Remove(buff);
@@ -357,9 +412,9 @@ namespace Script.Objects
             return false;
         }
         
-        protected void SetTarget(BaseObject target, bool AoE = false, bool friendly = false)
+        protected void SetTarget(BaseObject target, bool aoe = false, bool friendly = false)
         {
-            if (AoE)
+            if (aoe)
             {
                 _target = null;
                 movingTargetPosition = friendly

@@ -6,7 +6,6 @@ namespace Script.Enums
         Single,
         Blast,
         Bounce,
-        AoeFriendly,
-        AoeEnemy
+        Aoe,
     }
 }

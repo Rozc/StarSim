@@ -41,7 +41,7 @@ public class GameManager : SingletonBase<GameManager>
     {
         if (_state != GMStatus.BeforeInit)
         {
-            Debug.Log("Logic Error: Unexpected Message, Battle Already Started.");
+            Debug.LogError("Logic Error: Unexpected Message, Battle Already Started.");
             return;
         }
         _state = GMStatus.Idle;
@@ -61,7 +61,6 @@ public class GameManager : SingletonBase<GameManager>
         UI = GameObject.Find("UIDocument").GetComponent<UIController>();
         EC = EventCenter.Instance;
         TargetCursor = UnityEngine.Object.FindObjectOfType<CursorController>();
-        
 
         foreach (var obj in objs)
         {
@@ -80,11 +79,12 @@ public class GameManager : SingletonBase<GameManager>
         }
         UI.SetInteractable(ButtonID.BattleStart, false);
         TargetCursor.Initialize();
-        
+        EC.SubscribeEvent(EventID.ActionValueUpdate, EventUpdateTurnQ);
         // 这里可以处理一些秘技等战斗初始化动作
         
         BattleInit();
     }
+
     private void BattleInit() // ��ʼ���ж����У������ƽ�����һ�������ж���ʱ���
     {
         foreach (var obj in ObjDict.Values)
@@ -99,18 +99,7 @@ public class GameManager : SingletonBase<GameManager>
         UI.UpdateTurnQLabel();
         NextTurn();
     }
-
-    /*private void GameProcess()
-    {
-        NextTurn();
-        while (_actionQ.Count > 0)
-        {
-            Action action = NextAction();
-            _currentActionOf.GetAction(action);
-            // TODO: 这里需要处理一下行动中断的问题
-            // 这里需要等待用户输入，怎么处理呢
-        }
-    }*/
+    
     private void NextTurn()
     {
         Debug.Log("Into Turn of " + _turnQ.Top().BaseData.Name);
@@ -127,7 +116,7 @@ public class GameManager : SingletonBase<GameManager>
     }
     private void NextAction()
     {
-        Debug.Log("Into Action of " + _actionQ.Top().Actor.BaseData.Name);
+        Debug.Log("    Into Action of " + _actionQ.Top().Actor.BaseData.Name);
         Action action = _actionQ.Top();
         _currentActionOf = ObjDict[action.Actor.Data.CharacterID];
         AdjustButtonAndCursor();
@@ -137,6 +126,14 @@ public class GameManager : SingletonBase<GameManager>
         // return action;
         _currentActionOf.GetAction(action);
     }
+
+    private void InteractDone()
+    {
+        UI.UpdateActorName();
+        UI.UpdateActQLabel();
+        UI.UpdateTurnQLabel();
+    }
+    
     private void ActionDone()
     {
         if (_state != GMStatus.WaitingActDone)
@@ -185,7 +182,7 @@ public class GameManager : SingletonBase<GameManager>
             case KeyCode.Alpha2:
             case KeyCode.Alpha3:
             case KeyCode.Alpha4:
-                Debug.Log("Ultimate Button Clicked");
+                Debug.Log("    Ultimate Button Clicked");
                 TryFriendlyUltimate((int)input - (int)KeyCode.Alpha0);
                 return;
             case KeyCode.Q:
@@ -200,7 +197,7 @@ public class GameManager : SingletonBase<GameManager>
                 TryMoveCursor(input);
                 break;
             default:
-                Debug.Log("Wrong Input");
+                Debug.LogError("Wrong Input");
                 return;
         }
         
@@ -234,13 +231,16 @@ public class GameManager : SingletonBase<GameManager>
     {
         if (_currentActionOf is null)
         {
-            Debug.Log("Invalid Game Object"); return;
+            Debug.LogError("Invalid Game Object"); return;
         }
         switch (msg)
         {
             case Message.ActionPrepared:
                 _state = GMStatus.WaitingActDone;
                 _currentAction = _actionQ.Pop();
+                break;
+            case Message.InteractDone:
+                InteractDone();
                 break;
             case Message.ActionDone:
                 ActionDone();
@@ -252,7 +252,8 @@ public class GameManager : SingletonBase<GameManager>
         // AoE: 在所有目标身上生成光标
         // Blast: 在当前目标身上生成光标, 并在其两侧目标上生成一个较小的光标
         // Single: 在当前目标身上生成光标
-        
+        // Bounce: 当前目标大光标, 其他目标小光标
+        // TODO 情况不紧急, 以后再做
     }
 
     public int RequireExtraAction(Action action)
@@ -264,13 +265,16 @@ public class GameManager : SingletonBase<GameManager>
         }
 
         action.UAID = _currentUAID;
+        
         _currentUAID++;
         if (_actionQ.Push(action) && _state == GMStatus.WaitingAct)
         {
-            Debug.Log("额外行动插入，现行动打断，执行额外行动");
+            Debug.Log("    额外行动插入，现行动打断，执行额外行动");
+            UI.UpdateActQLabel();
             _currentActionOf.GetMessageFromGM(Message.Interrupt);
             NextAction();
         }
+        UI.UpdateActQLabel();
         return _currentUAID - 1;
     }
     public string GetActQ()
@@ -295,11 +299,15 @@ public class GameManager : SingletonBase<GameManager>
         return _currentActionOf.BaseData.Name;
     }
 
-    // ===================================== ����Ϊ Private ���� =====================================
+    // ===================================== Private =====================================
 
     private void TryFriendlyUltimate(int id)
     {
-        (PosDict[id] as Friendly).AskUltimate();
+        (PosDict[id] as Friendly)?.AskUltimate();
+    }
+    private void EventUpdateTurnQ(BaseObject sender, BaseObject _)
+    {
+        _turnQ.Update(sender.Data.CharacterID);
     }
     private void TryMoveCursor(KeyCode k)
     {
