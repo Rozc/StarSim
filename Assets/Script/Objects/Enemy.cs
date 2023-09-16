@@ -49,7 +49,7 @@ namespace Script.Objects
             }
 
             
-            ActionDetail ad = new ActionDetail(this, _Target, BasicAttackData);
+            ActionDetail ad = new ActionDetail(this, _target, BasicAttackData);
             GM.GetMessageFromActor(Message.ActionPrepared);
             InteractManager.Instance.Process(ad);
             // 默认实现占位符

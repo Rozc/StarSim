@@ -34,7 +34,7 @@ namespace Script.Objects
         // Animation Moving Settings
         protected Vector3 primitivePosition; 
         protected Vector3 primitiveRotation; 
-        protected BaseObject _Target; 
+        protected BaseObject _target; 
         protected Vector3 movingTargetPosition; 
     
         [field: SerializeField] public int Position { get; private set; }
@@ -57,26 +57,20 @@ namespace Script.Objects
             // ��Ŀ���ƶ����� StopDistance ��Χ��ֹͣ
             if (Vector3.Distance(transform.position, TargetPosition) > StopDistance)
             {
-                // Debug.LogFormat("MoveTo Moving, Atk: {0}", Atk);
                 transform.LookAt(TargetPosition);
                 transform.Translate(10 * Vector3.forward * Time.deltaTime);
-                // transform.position = Vector3.MoveTowards(transform.position, TargetPosition, 0.5f);
             }
             else
             {
-                // �ƶ��������״̬�л�
                 if (MovingState == MovingStatus.MoveAttacking)
                 {
-                    // Debug.Log("Atk Stop");
-                    movingTargetPosition = primitivePosition; // ��Ŀ��λ������Ϊ��ʼλ��
-                    MovingState = MovingStatus.MoveReturning; // �л�״̬�� �ƶ���-���س�ʼλ��
+                    movingTargetPosition = primitivePosition;
+                    MovingState = MovingStatus.MoveReturning;
                 }
                 else if (MovingState == MovingStatus.MoveReturning)
                 {
-                    // Debug.Log("Return Stop");
-                    movingTargetPosition = _Target.transform.position; // ��Ŀ��λ������Ϊ����Ŀ��λ��
-                    transform.eulerAngles = primitiveRotation; // ��ԭ����
-                    MovingState = MovingStatus.Idle; // �л�״̬�� ����
+                    transform.eulerAngles = primitiveRotation;
+                    MovingState = MovingStatus.Idle;
                     MoveDone();
                 }
             }
@@ -84,7 +78,7 @@ namespace Script.Objects
         protected virtual void MoveDone()
         {
             // 清除所有当前回合的数据并通知 GM 行动结束
-            _Target = null;
+            _target = null;
             _currentAction = null;
             GM.GetMessageFromActor(Message.ActionDone, Position);
         }
@@ -367,10 +361,25 @@ namespace Script.Objects
             return false;
         }
         
-        protected void SetTarget(BaseObject target)
+        protected void SetTarget(BaseObject target, bool AoE = false)
         {
-            _Target = target;
-            movingTargetPosition = _Target.transform.position;
+            if (AoE)
+            {
+                _target = null;
+                movingTargetPosition = Data.Path == PathType.None
+                    ? GM.FriendlyCenter.transform.position
+                    : GM.EnemyCenter.transform.position;
+            }
+            else if (target is not null)
+            {
+                _target = target;
+                movingTargetPosition = _target.transform.position;
+            }
+            else
+            {
+                throw new Exception("SetTarget Error: Target is null");
+            }
+
         }
 
     }

@@ -17,6 +17,9 @@ public class GameManager : SingletonBase<GameManager>
     public Dictionary<int, BaseObject> ObjDict; // <ID, Object>
     public List<Friendly> FriendlyObjects;
     public List<Enemy> EnemyObjects;
+    public GameObject FriendlyCenter;
+    public GameObject EnemyCenter;
+    
     private CursorController TargetCursor;
     private UIController UI;
     private EventCenter EC;
@@ -41,6 +44,9 @@ public class GameManager : SingletonBase<GameManager>
             return;
         }
         State = GMStatus.Idle;
+
+        FriendlyCenter = GameObject.Find("FriendlyCenter");
+        EnemyCenter = GameObject.Find("EnemyCenter");
 
         ObjDict = new Dictionary<int, BaseObject>();
         FriendlyObjects = new List<Friendly>();
@@ -551,9 +557,6 @@ public class GameManager : SingletonBase<GameManager>
  *
  * 角色数据可以分成 基础数据 行迹数据 光锥数据 遗器数据，这四个部分构成固定数据，然后固定数据与 Buff 数据结合，构成最终实时数据
  *
- * tnnd 到底怎么实现 分属性类型 啊 做成数组是可以，但是加Buff反射起来感觉性能会很差
- * 然后 Switch-Case 又太冗余了
- *
  * 要不改成 Dictionary，key 是 string，就是 属性类型的名字，value 是 float，就是属性值
  * 然后几个 Dictionary 分别表示各种数据
  * 然后用一个 Get 函数处理所有属性
@@ -565,16 +568,11 @@ public class GameManager : SingletonBase<GameManager>
  * 然后还要处理 Aoe 的目标选择情况
  *
  * Doing Aoe 目标选择
+ * Aoe 的情况可以把动画目标设为敌方中心点，然后 ad 的 target 字段就填 null 就好了
  *
- * First Commit
-已完成的系统：
-1. 行动管理
-2. Buff 管理（部分完成，DoT和控制类负面效果等需要在回合开始阶段结算的 Debuff 还没实现）
-正在做的系统：
-3. InteractManager，即伤害管理系统，会在做完 Buff 系统之后做，作为最后一个战斗逻辑方面的系统
-计划实现：
-4. 战斗入场、退场
-5. UI 优化
+ * Buff 系统还有一个重要的点没有做：CallBack
+ * 对于一些特殊的 Buff，比如在行动后、特定行为后进行某些操作的情况，需要实现。
+ *
  */
   
   

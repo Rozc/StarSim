@@ -26,18 +26,7 @@ namespace Script.Characters
         {
             Jades = new int[] {0, 0, 0, 0};
         }
-
-        protected override void OnTurnBegin()
-        {
-            base.OnTurnBegin();
-            // if (CheckJade())
-            // {
-            //     UI.SetInteractable(ButtonID.SkillAttack, false);
-            //     HiddenHand = true;
-            //     // TODO 这里也要生成一个 ActionDetail 然后发给 IM，规范化处理
-            // }
-            // // 好像不用在这个阶段检查
-        }
+        
 
         protected override void OnActionBegin()
         {
@@ -73,7 +62,7 @@ namespace Script.Characters
                 RemoveAllJades();
                 HiddenHand = false;
                 SetTarget(GM.CurrentTarget);
-                ActionDetail ad = new ActionDetail(this, _Target, EnhancedBasicAttackData);
+                ActionDetail ad = new ActionDetail(this, _target, EnhancedBasicAttackData);
                 GM.GetMessageFromActor(Message.ActionPrepared);
                 IM.Process(ad);
                 DoAction(SkillType.Attack, TargetForm.Blast);
@@ -82,7 +71,7 @@ namespace Script.Characters
             {
                 RemoveOneJade();
                 SetTarget(GM.CurrentTarget);
-                ActionDetail ad = new ActionDetail(this, _Target, BasicAttackData);
+                ActionDetail ad = new ActionDetail(this, _target, BasicAttackData);
                 GM.GetMessageFromActor(Message.ActionPrepared);
                 IM.Process(ad);
                 DoAction(SkillType.Attack, TargetForm.Single);
@@ -119,7 +108,7 @@ namespace Script.Characters
         {
             RemoveAllJades();
             Jades[0] = 4;
-            // TODO _Target = All Enemies
+            SetTarget(null, true);
             ActionDetail ad = new ActionDetail(this, this, UltimateData);
             GM.GetMessageFromActor(Message.ActionPrepared);
             IM.Process(ad);

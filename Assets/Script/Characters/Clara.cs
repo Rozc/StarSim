@@ -50,7 +50,7 @@ namespace Script.Characters
         protected override void BasicAttack()
         {   
             SetTarget(GM.CurrentTarget);
-            ActionDetail ad = new ActionDetail(this, _Target, BasicAttackData);
+            ActionDetail ad = new ActionDetail(this, _target, BasicAttackData);
             GM.GetMessageFromActor(Message.ActionPrepared);
             IM.Process(ad);
             DoAction(SkillType.Attack, TargetForm.Single);
@@ -60,17 +60,12 @@ namespace Script.Characters
         {
             // TODO
             // 对于具有反击标记的敌人，额外造成一次伤害，并清除其反击标记
-            List<ActionDetail> ads = new List<ActionDetail>();
-            foreach (var enemy in GM.EnemyObjects)
-            {
-                if (enemy.HasBuff(1000103, out var _))
-                {
-                    ads.Add(new ActionDetail(this, enemy, skillOnFlagData)); 
-                }
-            }
-            
-            SetTarget(GM.CurrentTarget);
-            ActionDetail ad = new ActionDetail(this, _Target, SkillAttackData);
+            List<ActionDetail> ads = (from enemy in GM.EnemyObjects where enemy.HasBuff(1000103, out var _)
+                select new ActionDetail(this, enemy, skillOnFlagData)).ToList();
+
+            // AoE
+            SetTarget(null, true);
+            ActionDetail ad = new ActionDetail(this, _target, SkillAttackData);
             GM.GetMessageFromActor(Message.ActionPrepared);
             IM.Process(ad);
             foreach (var aad in ads)
@@ -104,7 +99,7 @@ namespace Script.Characters
             if (enhancedCounterCount > 0)
             {
                 enhancedCounterCount--;
-                ActionDetail ad = new ActionDetail(this, _Target, enhancedCounterData);
+                ActionDetail ad = new ActionDetail(this, _target, enhancedCounterData);
                 // 执行强化反击
                 GM.GetMessageFromActor(Message.ActionPrepared);
                 IM.Process(ad);
@@ -124,7 +119,7 @@ namespace Script.Characters
             else
             {
                 // 暂时有点冗余，考虑一下修改 DoAction 函数
-                ActionDetail ad = new ActionDetail(this, _Target, counterData);
+                ActionDetail ad = new ActionDetail(this, _target, counterData);
                 GM.GetMessageFromActor(Message.ActionPrepared);
                 IM.Process(ad);
                 DoAction(SkillType.Attack, TargetForm.Single);
