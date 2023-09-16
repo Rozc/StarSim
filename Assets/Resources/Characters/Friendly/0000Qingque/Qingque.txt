@@ -1,0 +1,4 @@
+Health: 1032, Attack: 652, Defence: 441, Speed: 98, MaxEnergy: 140,
+Health: 1241, Attack: 737, Defence: 485, Speed: 90, MaxEnergy: 110
+Health: 1241, Attack: 582, Defence: 533, Speed: 99, MaxEnergy: 120
+Health: 1280, Attack: 756, Defence: 363, Speed: 101, MaxEnergy: 100

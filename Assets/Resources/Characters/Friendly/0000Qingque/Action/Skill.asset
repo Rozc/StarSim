@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a7cd8ffce74c91b138d8cdbdcdbf50, type: 3}
+  m_Name: Skill
+  m_EditorClassIdentifier: 
+  <SkillType>k__BackingField: 2
+  <TargetForm>k__BackingField: 1
+  <BuffDataList>k__BackingField:
+  - {fileID: 11400000, guid: 2af5462476a8f134f9797a33d9fb60c4, type: 2}
+  - {fileID: 11400000, guid: f84c94337e0d89c48b8b264356ec3922, type: 2}
+  damageType: 0
+  <Multiple>k__BackingField: 

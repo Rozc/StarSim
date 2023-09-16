@@ -1,0 +1,30 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement />
+    <ui:VisualElement style="flex-direction: row; height: 100%;">
+        <ui:Button text="Battle&#10;Start" display-tooltip-when-elided="true" name="Btn_BattleStart" enable-rich-text="true" style="white-space: nowrap; flex-direction: column; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px;" />
+        <ui:VisualElement style="height: 100%; width: 200px; flex-direction: column; align-items: flex-start;">
+            <ui:VisualElement style="flex-direction: row; width: 100%; height: 10%;">
+                <ui:Label text="Label" display-tooltip-when-elided="true" name="Lab_Actor" style="width: 40%; height: 100%; padding-left: 6px; padding-right: 6px; padding-top: 1px; padding-bottom: 1px; color: rgba(0, 0, 0, 255); background-color: rgba(255, 255, 255, 255);" />
+                <ui:Label text="Label" display-tooltip-when-elided="true" name="Lab_ActQ" style="width: 60%; height: 100%; background-color: rgba(255, 255, 255, 255); color: rgba(0, 0, 0, 255);" />
+            </ui:VisualElement>
+            <ui:Label text="Label" display-tooltip-when-elided="true" name="Lab_TurnQ" style="width: 100%; height: 50%; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); -unity-font: url(&apos;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&apos;); -unity-font-style: normal; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 6px; padding-right: 6px; padding-top: 1px; padding-bottom: 1px;" />
+            <ui:VisualElement style="flex-direction: row; height: 10%; width: 100%; justify-content: center;">
+                <ui:Button text="Q / Basic" display-tooltip-when-elided="true" name="Btn_Basic" style="width: 50%; height: auto; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 6px; padding-right: 6px; padding-top: 1px; padding-bottom: 1px;" />
+                <ui:Button text="E / Skill" display-tooltip-when-elided="true" name="Btn_Skill" style="width: 50%; height: auto; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 6px; padding-right: 6px; padding-top: 1px; padding-bottom: 1px;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row; justify-content: center; width: 100%; height: 10%;">
+                <ui:Button text="Space" display-tooltip-when-elided="true" name="Btn_Space" style="width: 100%; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 6px; padding-right: 6px; padding-top: 1px; padding-bottom: 1px;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row; height: 10%; width: 100%; justify-content: center; align-items: stretch;">
+                <ui:Button text="Left" display-tooltip-when-elided="true" name="Btn_Left" style="width: 50%; height: auto; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 6px; padding-right: 6px; padding-top: 1px; padding-bottom: 1px;" />
+                <ui:Button text="Right" display-tooltip-when-elided="true" name="Btn_Right" style="width: 50%; height: auto; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 6px; padding-right: 6px; padding-top: 1px; padding-bottom: 1px;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row; bottom: 0; justify-content: center; width: 100%; height: 7%;">
+                <ui:Button text="1" display-tooltip-when-elided="true" name="Btn_Ultimate1" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; width: 25%;" />
+                <ui:Button text="2" display-tooltip-when-elided="true" name="Btn_Ultimate2" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; width: 25%;" />
+                <ui:Button text="3" display-tooltip-when-elided="true" name="Btn_Ultimate3" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; width: 25%;" />
+                <ui:Button text="4" display-tooltip-when-elided="true" name="Btn_Ultimate4" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; width: 25%;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
