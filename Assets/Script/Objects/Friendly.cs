@@ -48,7 +48,7 @@ namespace Script.Objects
         {
             SetTarget(GM.CurrentTarget);
             GM.GetMessageFromActor(Message.ActionPrepared);
-            DoAction(SkillType.Attack, TargetForm.AoeEnemy);
+            DoAction(SkillType.Attack, TargetForm.Aoe);
         }
 
         public void AskUltimate()
@@ -78,14 +78,10 @@ namespace Script.Objects
                     BasicAttack();
                     break;
                 case (ActionType.Base, CommandStatus.BasicAttack, KeyCode.E):
-                    CommandState = CommandStatus.SkillAttack;
-                    UI.SetInteractable(ButtonID.BasicAttack, true);
-                    UI.SetInteractable(ButtonID.SkillAttack, false);
+                    ReadyTo(CommandStatus.SkillAttack);
                     break;
                 case (ActionType.Base, CommandStatus.SkillAttack, KeyCode.Q):
-                    CommandState = CommandStatus.BasicAttack;
-                    UI.SetInteractable(ButtonID.BasicAttack, false);
-                    UI.SetInteractable(ButtonID.SkillAttack, true);
+                    ReadyTo(CommandStatus.BasicAttack);
                     break;
                 case (ActionType.Base, CommandStatus.SkillAttack, KeyCode.E):
                 case (ActionType.Base, CommandStatus.SkillAttack, KeyCode.Space):
@@ -97,7 +93,7 @@ namespace Script.Objects
 
             }
         }
-
+        
         public override void GetAction(Action action)
         {
             if (action.Actor.Position != this.Position)
@@ -110,6 +106,7 @@ namespace Script.Objects
             {
                 case ActionType.Base:
                     CommandState = CommandStatus.BasicAttack;
+                    ReadyTo(CommandStatus.BasicAttack);
                     break;
                 case ActionType.Extra: // Here Only Ultimate
                     if (_currentAction.ExtraActCode != 0)
@@ -117,6 +114,7 @@ namespace Script.Objects
                         // Debug.LogError(Data.BaseData.Name + " Get Action Error: Extra Action except Ultimate should be handled in Child Class!");
                     }
                     CommandState = CommandStatus.Release;
+                    ReadyTo(CommandStatus.Release);
                     break;
                 case ActionType.Followup:
                     // Debug.LogError(Data.BaseData.Name + " Get Action Error: Follow-up Action should be handled in Child Class!");
@@ -132,6 +130,35 @@ namespace Script.Objects
         {
             base.ActionInterrupt();
             CommandState = CommandStatus.None;
+        }
+        
+        protected virtual void ReadyTo(CommandStatus commandStatus)
+        {
+            switch (commandStatus)
+            {
+                case CommandStatus.BasicAttack:
+                    CommandState = CommandStatus.BasicAttack;
+                    UI.SetInteractable(ButtonID.BasicAttack, false);
+                    UI.SetInteractable(ButtonID.SkillAttack, true);
+                    GM.SetCursorForm(BasicAttackData.TargetForm, BasicAttackData.TargetSide);
+                    break;
+                case CommandStatus.SkillAttack:
+                    CommandState = CommandStatus.SkillAttack;
+                    UI.SetInteractable(ButtonID.BasicAttack, true);
+                    UI.SetInteractable(ButtonID.SkillAttack, false);
+                    GM.SetCursorForm(SkillAttackData.TargetForm, SkillAttackData.TargetSide);
+                    break;
+                case CommandStatus.Release:
+                    CommandState = CommandStatus.Release;
+                    UI.SetInteractable(ButtonID.BasicAttack, false);
+                    UI.SetInteractable(ButtonID.SkillAttack, false);
+                    GM.SetCursorForm(UltimateData.TargetForm, UltimateData.TargetSide);
+                    break;
+                case CommandStatus.None:
+                    CommandState = CommandStatus.None;
+                    GM.SetCursorForm(TargetForm.None, TargetSide.None);
+                    break;
+            }
         }
 
 

@@ -47,6 +47,9 @@ namespace Script.Objects
         protected EventCenter EC;
         protected InteractManager IM;
 
+        private CursorController _cursorMain;
+        private CursorController _cursorSub;
+
 
         protected void MoveTo(Vector3 TargetPosition, float StopDistance)
         {
@@ -98,7 +101,7 @@ namespace Script.Objects
             primitivePosition = transform.position;
             primitiveRotation = transform.eulerAngles;
             movingTargetPosition = transform.position;
-            
+
         }
         protected void Update()
         {
@@ -383,6 +386,43 @@ namespace Script.Objects
             }
         }
         
+        public void GetCursor(CursorController cursorMain, CursorController cursorSub)
+        {
+            _cursorMain = cursorMain;
+            _cursorSub = cursorSub;
+            var position = transform.position;
+            cursorMain.transform.position = position;
+            cursorSub.transform.position = position;
+        }
+        
+        public void ShowCursor(bool show, bool main = true)
+        {
+            if (!show)
+            {
+                _cursorMain.Hide();
+                _cursorSub.Hide();
+                return;
+            }
+            if (main)
+            {
+                _cursorMain.Show();
+                _cursorSub.Hide();
+            }
+            else
+            {
+                _cursorMain.Hide();
+                _cursorSub.Show();
+            }
+        }
+        public bool TryGetLeft(out BaseObject obj)
+        {
+            return GM.PosDict.TryGetValue(Position - 1, out obj);
+        }
+        public bool TryGetRight(out BaseObject obj)
+        {
+            return GM.PosDict.TryGetValue(Position + 1, out obj);
+        }
+        
 
         protected virtual void RegisterEvent()
         {
@@ -432,6 +472,10 @@ namespace Script.Objects
             }
 
         }
+        
+        
+        
+        
 
     }
 }

@@ -112,7 +112,7 @@ namespace Script.Characters
             ActionDetail ad = new ActionDetail(this, this, UltimateData);
             GM.GetMessageFromActor(Message.ActionPrepared);
             IM.Process(ad);
-            DoAction(SkillType.Attack, TargetForm.AoeEnemy);
+            DoAction(SkillType.Attack, TargetForm.Aoe);
         }
 
         protected void ShowHiddenHand()

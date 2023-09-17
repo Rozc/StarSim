@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SkillType>k__BackingField: 0
   <TargetForm>k__BackingField: 2
+  <TargetSide>k__BackingField: 2
   <BuffDataList>k__BackingField:
   - {fileID: 11400000, guid: e7cae45d4c039094ab293e824bbc6ea1, type: 2}
-  damageType: 4
+  <RemoveABuff>k__BackingField: 0
+  <RemoveADebuff>k__BackingField: 0
+  <RemoveTheSpecifiedBuff>k__BackingField: 
+  <NotAnDiscreteAction>k__BackingField: 0
+  <damageType>k__BackingField: 0
   <MultipleCenter>k__BackingField: c8000000
   <MultipleAdjacent>k__BackingField: 64000000

@@ -16,7 +16,7 @@ namespace Script.Characters
             // 先上 Buff
             // 然后解除负面效果
             // 最后使目标立即行动
-            SetTarget(GM.PosDict[1]);
+            SetTarget(GM.CurrentTarget);
             ActionDetail ad = new ActionDetail(this, _target, SkillAttackData);
             GM.GetMessageFromActor(Message.ActionPrepared);
             IM.Process(ad);

@@ -247,3 +247,9 @@ Doing 选择己方目标
 
 把 AoE 拆分成 AoeFriendly 和 AoeEnemy
 ```
+
+GetAction 和 GetInputFromGM 需要在改变 CommandState 的同时
+告知 GM 修改光标状态
+考虑把这部分封装成一个函数
+需要在进入 Action 时获取光标状态
+在 ActionPrepared 时将光标关闭

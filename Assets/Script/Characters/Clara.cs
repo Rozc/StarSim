@@ -72,7 +72,7 @@ namespace Script.Characters
             {
                 IM.Process(aad);
             }
-            DoAction(SkillType.Attack, TargetForm.AoeEnemy);
+            DoAction(SkillType.Attack, TargetForm.Aoe);
         }
 
 

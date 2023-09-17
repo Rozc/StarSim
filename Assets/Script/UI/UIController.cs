@@ -24,6 +24,7 @@ public class UIController : MonoBehaviour
 
     private GameManager GM;
     private EventCenter EC;
+    
     // Start is called before the first frame update
     void Start()
     {
