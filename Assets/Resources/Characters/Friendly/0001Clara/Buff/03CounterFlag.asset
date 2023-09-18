@@ -16,7 +16,7 @@ MonoBehaviour:
   <BuffID>k__BackingField: 1000103
   <BuffName>k__BackingField: "\u53CD\u51FB\u6807\u8BB0"
   <Description>k__BackingField: "\u8BE5\u76EE\u6807\u88AB\u53F2\u74E6\u7F57\u6807\u8BB0"
-  <BuffType>k__BackingField: 2
+  <BuffType>k__BackingField: 3
   <DurationBaseOnTurn>k__BackingField: 0
   <Duration>k__BackingField: 1
   <Stackable>k__BackingField: 0
@@ -31,4 +31,4 @@ MonoBehaviour:
   <HasCallBack>k__BackingField: 0
   <CallBackList>k__BackingField: []
   <HasProperty>k__BackingField: 0
-  <BuffProperties>k__BackingField: []
+  <BuffPropertyList>k__BackingField: []

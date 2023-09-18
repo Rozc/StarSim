@@ -303,7 +303,7 @@ namespace Script.Objects
             buff = null;
             return false;
         }
-
+        public void TriggerBuff(int buffID) {}
         
         
         

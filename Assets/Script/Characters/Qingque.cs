@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Script.Data;
 using Script.Data.ActionData.AttackData;
 using Script.Enums;
 using Script.InteractLogic;
@@ -16,14 +17,18 @@ namespace Script.Characters
         // 0: Ultimate
         // 1: Extra Action After E
         // 2: Hidden Hand Animation
+        // 3: Autarky
         
         [field: SerializeField] private int[] Jades;
         [field: SerializeField] private bool HiddenHand = false;
-        [field: SerializeField] private BlastData EnhancedBasicAttackData;
-        [field: SerializeField] private SingleData HiddenHandData;
-        
-        Qingque()
+        [field: SerializeField] private ActionDataBase EnhancedBasicAttackData;
+        [field: SerializeField] private ActionDataBase HiddenHandData;
+        [field: SerializeField] private ActionDataBase AutarkyBasicData;
+        [field: SerializeField] private ActionDataBase AutarkyEnhancedData;
+
+        private new void Start()
         {
+            base.Start();
             Jades = new int[] {0, 0, 0, 0};
         }
         
@@ -38,9 +43,8 @@ namespace Script.Characters
             {
                 if (HiddenHand)
                 {
-                    UI.SetInteractable(ButtonID.SkillAttack, false);
-                    UI.SetInteractable(ButtonID.BasicAttack, false);
-                    CommandState = CommandStatus.BasicAttack;
+                    ReadyTo(CommandStatus.BasicAttack);
+                    GM.SetCursorForm(TargetForm.Blast, TargetSide.Enemy);
                 }
                 else if (CheckJade())
                 {
@@ -57,28 +61,52 @@ namespace Script.Characters
         
         protected override void BasicAttack()
         {
+            SetTarget(GM.CurrentTarget);
+            ActionDetail ad;
             if (HiddenHand)
             {
                 RemoveAllJades();
-                HiddenHand = false;
-                SetTarget(GM.CurrentTarget);
-                ActionDetail ad = new ActionDetail(this, _target, EnhancedBasicAttackData);
-                GM.GetMessageFromActor(Message.ActionPrepared);
-                IM.Process(ad);
-                DoAction(SkillType.Attack, TargetForm.Blast);
+                ad = new ActionDetail(this, _target, EnhancedBasicAttackData);
             }
             else
             {
                 RemoveOneJade();
-                SetTarget(GM.CurrentTarget);
-                ActionDetail ad = new ActionDetail(this, _target, BasicAttackData);
-                GM.GetMessageFromActor(Message.ActionPrepared);
-                IM.Process(ad);
-                DoAction(SkillType.Attack, TargetForm.Single);
+                ad = new ActionDetail(this, _target, BasicAttackData);
             }
+            GM.GetMessageFromActor(Message.ActionPrepared);
+            IM.Process(ad);
+            bool autarky = HasBuff(1000002, out _);
+            if (autarky)
+            {
+                Action action = new Action(
+                    this,
+                    ActionType.Followup,
+                    ActionPriority.Qingque_Autarky,
+                    extraActCode:3);
+                GM.RequireExtraAction(action);
+            }
+            DoAction(SkillType.Attack, HiddenHand ? TargetForm.Blast : TargetForm.Single);
+            if (!autarky) HiddenHand = false;
+        }
 
-            
-
+        private void Autarky()
+        {
+            SetTarget(GM.CurrentTarget);
+            ActionDetail ad;
+            if (HiddenHand)
+            {
+                RemoveAllJades();
+                ad = new ActionDetail(this, _target, AutarkyEnhancedData);
+            }
+            else
+            {
+                RemoveOneJade();
+                ad = new ActionDetail(this, _target, AutarkyBasicData);
+            }
+            GM.GetMessageFromActor(Message.ActionPrepared);
+            IM.Process(ad);
+            DoAction(SkillType.Attack, HiddenHand ? TargetForm.Blast : TargetForm.Single);
+            HiddenHand = false;
         }
         protected override void SkillAttack()
         {
@@ -115,7 +143,7 @@ namespace Script.Characters
             DoAction(SkillType.Attack, TargetForm.Aoe);
         }
 
-        protected void ShowHiddenHand()
+        private void ShowHiddenHand()
         {
             HiddenHand = true;
             ActionDetail ad = new ActionDetail(this, this, HiddenHandData);
@@ -181,9 +209,13 @@ namespace Script.Characters
                 UI.SetInteractable(ButtonID.SkillAttack, false);
                 CommandState = CommandStatus.SkillAttack;
             }
-            else if (action.ActionType is ActionType.Followup)
+            else if (action.ActionType is ActionType.Followup && action.ExtraActCode == 2)
             {
                 ShowHiddenHand();
+            }
+            else if (action.ActionType is ActionType.Followup && action.ExtraActCode == 3)
+            {
+                Autarky();
             }
             else
             {

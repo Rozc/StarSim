@@ -11,6 +11,7 @@ namespace Script.Enums
         Ultimate, 
         Qingque_HiddenHand,
         Qingque_ExtraAction,
+        Qingque_Autarky,
         Base,
     }
 }

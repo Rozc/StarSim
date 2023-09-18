@@ -50,21 +50,22 @@ namespace Script.Objects
             }
             
             if (BaseData.TryGetValue(propName, out float value)) result += value;
-            if (BaseData.TryGetValue(propName+"%", out value)) result += GetFixed(propName) * value * 0.01f;
+            // if (BaseData.TryGetValue(propName+"%", out value)) result += GetFixed(propName) * value * 0.01f;
             
             if (TraceData.TryGetValue(propName, out value)) result += value;
-            if (TraceData.TryGetValue(propName+"%", out value)) result += GetFixed(propName) * value * 0.01f;
+            // if (TraceData.TryGetValue(propName+"%", out value)) result += GetFixed(propName) * value * 0.01f;
 
             if (LightConeData.TryGetValue(propName, out value)) result += value;
-            if (LightConeData.TryGetValue(propName+"%", out value)) result += GetFixed(propName) * value * 0.01f;
+            // if (LightConeData.TryGetValue(propName+"%", out value)) result += GetFixed(propName) * value * 0.01f;
 
             if (RelicsData.TryGetValue(propName, out value)) result += value;
-            if (RelicsData.TryGetValue(propName+"%", out value)) result += GetFixed(propName) * value * 0.01f;
+            // if (RelicsData.TryGetValue(propName+"%", out value)) result += GetFixed(propName) * value * 0.01f;
 
 
             foreach (var buff in BuffList)
             {
-                if (buff.PropertyDict.TryGetValue(propName, out value)) result += value;
+                if (buff.PropertyDict.TryGetValue(propName, out value)) 
+                    result += value * buff.CurrentStack;
             }
             return result;
         }

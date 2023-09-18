@@ -13,12 +13,11 @@ MonoBehaviour:
   m_Name: Ultimate
   m_EditorClassIdentifier: 
   <SkillType>k__BackingField: 0
+  <DamageType>k__BackingField: 3
   <TargetForm>k__BackingField: 4
   <TargetSide>k__BackingField: 2
   <BuffDataList>k__BackingField: []
-  <RemoveABuff>k__BackingField: 0
-  <RemoveADebuff>k__BackingField: 0
+  <RemoveA>k__BackingField: 0
   <RemoveTheSpecifiedBuff>k__BackingField: 
   <NotAnDiscreteAction>k__BackingField: 0
-  <damageType>k__BackingField: 0
   <Multiple>k__BackingField: c8000000
