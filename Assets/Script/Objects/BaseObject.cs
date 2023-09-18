@@ -20,11 +20,8 @@ namespace Script.Objects
         // TODO 光锥数据和遗器数据
         
         // Realtime Data
-        public RealtimeData Data { get; private set; }
+        [field: SerializeField] public RealtimeData Data { get; private set; }
         [field: SerializeField] public bool isAlive = true;
-        [field: SerializeField] protected List<Buff> BuffList; // 用 Dict 可能性能更好，但是为了在 Inspector 里方便查看，还是用 List 吧
-        [field: SerializeField] protected List<Buff> DoTList;
-        [field: SerializeField] protected List<Buff> CtrlList;
         
 
         // Animation Moving Settings
@@ -89,7 +86,6 @@ namespace Script.Objects
             EC = EventCenter.Instance;
             UI = GameObject.Find("UIDocument").GetComponent<UIController>();
             IM = InteractManager.Instance;
-            BuffList = new List<Buff>();
             Data = new RealtimeData(BaseData);
 
 
@@ -118,12 +114,14 @@ namespace Script.Objects
             }
         }
 
+        
+        // ====================================== OnStage ======================================
         protected virtual void OnSpawn() {}
 
         protected virtual void OnTurnBegin()
         {
             // 检查 BuffList
-            foreach (var buff in BuffList.Where(buff => buff.Data.CheckAtTurnBegin))
+            foreach (var buff in Data.BuffList.Where(buff => buff.Data.CheckAtTurnBegin))
             {
                 buff.CheckPointPassed = true;
             }
@@ -135,7 +133,7 @@ namespace Script.Objects
         protected virtual void OnMainActionEnd()
         {
             // 检查 BuffList
-            foreach (var buff in BuffList.Where(buff => buff.Data.CheckAtMainActionEnd))
+            foreach (var buff in Data.BuffList.Where(buff => buff.Data.CheckAtMainActionEnd))
             {
                 buff.CheckPointPassed = true;
             }
@@ -146,7 +144,7 @@ namespace Script.Objects
         {
             // 检查 BuffList 并结算
             var dyingBuffList = new List<Buff>();
-            foreach (var buff in BuffList)
+            foreach (var buff in Data.BuffList)
             {
                 if (buff.Data.DurationBaseOnTurn && buff.CheckPointPassed)
                 {
@@ -171,6 +169,9 @@ namespace Script.Objects
         }
         protected virtual void OnDeath() {}
 
+        
+        
+        // ====================================== Action ======================================
         public abstract void GetAction(Action action);
         protected virtual void DoAction(SkillType skillType, TargetForm targetForm)
         {
@@ -182,177 +183,126 @@ namespace Script.Objects
             MovingState = MovingStatus.MoveAttacking;
             // GM.GetMessageFromActor(Message.ActionDone, ID);
         }
-
-
         protected virtual void ActionInterrupt()
         {
             Debug.Log("    " + BaseData.Name + ": Action Interrupted");
             _currentAction = null;
         }
-
-
         
-        public virtual void OnTargeted(ActionDetail ad)
+        
+        
+        // ====================================== Damage ======================================
+        public virtual void ReceiveDamage(float value, BaseObject actor, bool trigger = true)
         {
-            // 先处理 Buff，再处理数值
-            // 需要将其中每个 Buff 的效果都应用到自己身上
-            if (ad.Data.RemoveABuff)
+            // Data...
+            // TODO Data...
+            if (trigger) EC.TriggerEvent(EventID.ObjectOnHit, this, actor);
+        }
+        public virtual void ReceiveHealing(float value, BaseObject actor, bool trigger = true)
+        {
+            // Data...
+            // TODO Data...
+            if (trigger) EC.TriggerEvent(EventID.ObjectOnHeal, this, actor);
+        }
+        
+        
+        
+        // ===================================== Buff =======================================
+        public virtual void RemoveABuff(BuffType buffType)
+        {
+            // 遍历所有 Debuff，保存第一个找到的
+            // 继续遍历，如果遇到了需要首先被移除的，就替换然后停止遍历，清掉这个 Debuff
+            // 如果遍历完了都没找到需要首先被移除的，就清掉第一个找到的
+            // 反向遍历
+            Buff buffToRemove = null;
+            bool found = false;
+            for (int i = Data.BuffList.Count - 1; i >= 0; i--)
             {
-                // 反向遍历
-                for (int i = BuffList.Count - 1; i >= 0; i--)
+                if (Data.BuffList[i].Data.BuffType == buffType)
                 {
-                    if (BuffList[i].Data.BuffType != BuffType.Buff) continue;
-                    RemoveBuff(BuffList[i]);
-                    break;
-                }
-            }
-
-            if (ad.Data.RemoveADebuff)
-            {
-                // 遍历所有 Debuff，保存第一个找到的
-                // 继续遍历，如果遇到了需要首先被移除的，就替换然后停止遍历，清掉这个 Debuff
-                // 如果遍历完了都没找到需要首先被移除的，就清掉第一个找到的
-                // 反向遍历
-                Buff debuffToRemove = null;
-                bool found = false;
-                for (int i = BuffList.Count - 1; i >= 0; i--)
-                {
-                    if (BuffList[i].Data.BuffType == BuffType.Debuff)
+                    if (!found)
                     {
-                        if (!found)
-                        {
-                            debuffToRemove = BuffList[i];
-                            found = true;
-                        }
-                        if (BuffList[i].Data.NeedToBeRemovedFirst)
-                        {
-                            debuffToRemove = BuffList[i];
-                            break;
-                        }
+                        buffToRemove = Data.BuffList[i];
+                        found = true;
+                    }
+                    if (Data.BuffList[i].Data.NeedToBeRemovedFirst)
+                    {
+                        buffToRemove = Data.BuffList[i];
+                        break;
                     }
                 }
-
-                if (found)
-                {
-                    RemoveBuff(debuffToRemove);
-                }
-                    
             }
 
-            foreach (var buffID in ad.Data.RemoveTheSpecifiedBuff)
+            if (found)
             {
-                if (HasBuff(buffID, out int idx))
-                {
-                    RemoveBuff(BuffList[idx]);
-                }
+                RemoveBuff(buffToRemove);
             }
+        }
+        public virtual void RemoveTheBuff(int buffID)
+        {
+            if (HasBuff(buffID, out var buff))
+            {
+                RemoveBuff(buff);
+            }
+        }
+        public virtual void ReceiveBuff(Buff[] buffs)
+        {
             
-            foreach (var buffData in ad.Data.BuffDataList)
+            foreach (var buff in buffs)
             {
                 // Done: 检查身上是否已有该 Buff，如果有，检查是否可叠加，如果可叠加则叠加，否则仅更新持续时间
                 // 有些 Buff 叠层之后效果也会叠加，考虑去掉原来的 Buff 然后加一个新的？
                 // 要保证添加 Buff 和移除 Buff 是一个互补的操作
+                if (buff is null) continue;
+                // 对速度和距离做特殊处理, 需要在 UI 体现，并且距离的影响是即时的，且在 Buff 移除时也不会返还
+                // 或者说 距离本就不是 Buff，行动提前/延后只是对对象的一种瞬时操作。
+                if (buff.PropertyDict.TryGetValue("Distance", out var value))
+                {
+                    Distance += (int)(value * 0.01f * Distance);
+                    EC.TriggerEvent(EventID.ActionValueUpdate, this, buff.Caster);
+                    buff.PropertyDict.Remove("Distance");
+                }
                 
-                // TODO 命中概率计算，需要获取施加者的效果命中
-                float probability = buffData.Probability;
-                if (!buffData.FixedProbability)
-                {
-                    // TODO 根据效果命中和效果抵抗，利用公式计算最终概率
-                }
-                if (Random.Range(0f, 99.99f) > probability)
-                {
-                    // 未命中
-                    continue;
-                }
-                if (HasBuff(buffData.BuffID, out int idx))
+                if (HasBuff(buff.Data.BuffID, out Buff buffed))
                 {
                     // TODO 这里可能还有得优化，不过先这样做了，也能在 UI 体现被更新的 Buff 会移到最前面
-                    Buff buff = BuffList[idx];
-                    RemoveBuff(buff);
-                    if (buffData.Stackable)
+                    Data.BuffList.Remove(buffed);
+                    if (buff.Data.Stackable)
                     {
-                        buff.CurrentStack = Mathf.Min(buff.CurrentStack + buffData.StackAtATime, buffData.MaxStack);
+                        buffed.CurrentStack = Mathf.Min(buffed.CurrentStack + buff.Data.StackAtATime, buff.Data.MaxStack);
                     }
-                    buff.DurationLeft = buffData.Duration;
-                    AddBuff(buff);
+                    buffed.DurationLeft = buff.Data.Duration;
+                    Data.BuffList.Add(buffed);
                 }
                 else
                 {
-                    AddBuff(new Buff(buffData, buffData.StackAtATime));
+                    Data.BuffList.Add(buff);
                 }
-                
+                if (buff.PropertyDict.ContainsKey("Speed")) EC.TriggerEvent(EventID.ActionValueUpdate, this, buff.Caster);
             }
-            switch (ad.Data.SkillType)
+            
+        }
+        protected void RemoveBuff(Buff buff)
+        {
+            Data.BuffList.Remove(buff);
+            if (buff.PropertyDict.ContainsKey("Speed")) EC.TriggerEvent(EventID.ActionValueUpdate, this, buff.Caster);
+        }
+        public bool HasBuff(int buffID, out Buff buff)
+        {
+            foreach (var t in Data.BuffList.Where(t => t.Data.BuffID == buffID))
             {
-                case SkillType.Attack:
-                    // Data.CurrentHealth -= value;
-                    if (! ad.Data.NotAnDiscreteAction)
-                    {
-                        EC.TriggerEvent(EventID.ObjectOnHit, this, ad.Actor);
-                    }
-                    break;
-                case SkillType.Restore:
-                    // Data.CurrentHealth += value;
-                    if (! ad.Data.NotAnDiscreteAction)
-                    {
-                        EC.TriggerEvent(EventID.ObjectOnHeal, this, ad.Actor);
-                    }
-                    break;
-                default:
-                    break;
+                buff = t;
+                return true;
             }
+
+            buff = null;
+            return false;
         }
 
-        protected virtual bool AddBuff(Buff buff)
-        {
-            foreach (var s in buff.Data.BuffProperties)
-            {
-                var ss = s.Split(':', '%');
-                var propName = ss[0].Trim();
-                if (ss.Length >= 2 && propName != "" && float.TryParse(ss[1], out float value))
-                {
-                    if (propName == "Speed") EC.TriggerEvent(EventID.ActionValueUpdate, this);
-                    if (propName == "Distance")
-                    {
-                        // 一般表现为行动提前 %，或行动延后 %，并且即时生效
-                        Distance += (int)(value * 0.01f * Distance) * buff.CurrentStack;
-                        EC.TriggerEvent(EventID.ActionValueUpdate, this);
-                        continue;
-                    }
-                    Data.Add(propName, value * buff.CurrentStack, ss.Length == 3);
-                    Debug.Log("        " + Data.Name 
-                              + " AddBuff: " 
-                              + propName + " " 
-                              + value + "*" + buff.CurrentStack + " " 
-                              + (ss.Length == 3 ? "%" : " Fixed") );
-                }
-            }
-            BuffList.Add(buff);
-            return true;
-        }
         
-        protected virtual void RemoveBuff(Buff buff)
-        {
-            foreach (var s in buff.Data.BuffProperties)
-            {
-                var ss = s.Split(':', '%');
-                var propName = ss[0].Trim();
-                if (ss.Length >= 2 && propName != "" && float.TryParse(ss[1], out float value))
-                {
-                    if (propName == "Speed") EC.TriggerEvent(EventID.ActionValueUpdate, this);
-                    if (propName == "Distance") continue; // 对于距离的改变，改了就不会还了，所以只需要在加 Buff 时处理
-
-                    Data.Minus(propName, value * buff.CurrentStack, ss.Length == 3);
-                    Debug.Log("        " + Data.Name 
-                              + " RemoveBuff: " 
-                              + propName + " " 
-                              + value + "*" + buff.CurrentStack + " " 
-                              + (ss.Length == 3 ? "%" : " Fixed") );
-                }
-            }
-            BuffList.Remove(buff);
-        }
-
+        
+        
+        // ====================================== Message =====================================
         public virtual void GetMessageFromGM(Message msg)
         {
             switch (msg)
@@ -437,20 +387,7 @@ namespace Script.Objects
         /// <param name="buffID"></param>
         /// <param name="idx"></param>
         /// <returns></returns>
-        public bool HasBuff(int buffID, out int idx)
-        {
-            for (int i = 0; i < BuffList.Count; i++)
-            {
-                if (BuffList[i].Data.BuffID == buffID)
-                {
-                    idx = i;
-                    return true;
-                }
-            }
 
-            idx = -1;
-            return false;
-        }
         
         protected void SetTarget(BaseObject target, bool aoe = false, bool friendly = false)
         {

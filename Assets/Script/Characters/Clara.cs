@@ -7,6 +7,7 @@ using Script.Enums;
 using Script.InteractLogic;
 using Script.Objects;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Script.Characters
 {
@@ -22,7 +23,7 @@ namespace Script.Characters
         [field: SerializeField] private ActionDataBase counterData;
         [field: SerializeField] private ActionDataBase enhancedCounterData;
         [field: SerializeField] private ActionDataBase skillOnFlagData;
-        [field: SerializeField] private BuffData OnSpawnBuff;
+        [field: SerializeField] private ActionDataBase OnSpawnBuffActionData;
 
         public override void GetAction(Action action)
         {
@@ -44,7 +45,7 @@ namespace Script.Characters
         protected override void OnSpawn()
         {
             base.OnSpawn();
-            AddBuff(new Buff(OnSpawnBuff, 1));
+            ActionDetail ad = new ActionDetail(this, this, OnSpawnBuffActionData);
         }
 
         protected override void BasicAttack()
@@ -103,14 +104,12 @@ namespace Script.Characters
                 // 执行强化反击
                 GM.GetMessageFromActor(Message.ActionPrepared);
                 IM.Process(ad);
-                // TODO 强化反击 Buff 的次数减少一次 写的优美一点
-                foreach (var buff in BuffList.Where(buff => buff.Data.BuffID == 1000102))
+                if (HasBuff(1000102, out var buff))
                 {
                     buff.CurrentStack--;
-                    if (buff.CurrentStack == 0)
+                    if (buff.CurrentStack <= 0)
                     {
-                        RemoveBuff(buff);
-                        break;
+                        Data.BuffList.Remove(buff);
                     }
                 }
                 

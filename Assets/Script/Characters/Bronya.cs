@@ -1,11 +1,17 @@
+using Script.BuffLogic;
+using Script.Data;
 using Script.Enums;
 using Script.InteractLogic;
 using Script.Objects;
+using UnityEngine;
 
 namespace Script.Characters
 {
     public class Bronya : Friendly
     {
+        [field: SerializeField] private BuffData SkillBuff;
+        [field: SerializeField] private BuffData UltimateBuff;
+        
         protected override void BasicAttack()
         {
             base.BasicAttack();
@@ -27,6 +33,8 @@ namespace Script.Characters
         protected override void Ultimate()
         {
             // TODO 在 Buff String 里实现一定程度的表达式计算
+            SetTarget(null, true, true);
+            ActionDetail ad = new ActionDetail(this, _target, UltimateData);
             base.Ultimate();
         }
     }

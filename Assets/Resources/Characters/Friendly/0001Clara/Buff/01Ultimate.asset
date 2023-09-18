@@ -31,6 +31,22 @@ MonoBehaviour:
   <HasCallBack>k__BackingField: 0
   <CallBackList>k__BackingField: []
   <HasProperty>k__BackingField: 1
-  <BuffProperties>k__BackingField:
-  - 'DamageReductionAll: 22'
-  - 'HitFactor: 200'
+  <BuffPropertyList>k__BackingField:
+  - propName: DamageReductionAll
+    valueBasedOn: 1
+    value: 22
+    maxBasedOn: 0
+    maxPropName: 
+    max: 0
+    minBasedOn: 0
+    minPropName: 
+    min: 0
+  - propName: HitFactor
+    valueBasedOn: 1
+    value: 200
+    maxBasedOn: 0
+    maxPropName: 
+    max: 0
+    minBasedOn: 0
+    minPropName: 
+    min: 0

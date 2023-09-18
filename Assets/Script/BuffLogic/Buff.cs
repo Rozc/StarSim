@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Script.Data;
+using Script.InteractLogic;
+using Script.Objects;
 using UnityEngine;
 
 namespace Script.BuffLogic
@@ -11,30 +13,67 @@ namespace Script.BuffLogic
         [field: SerializeField] public BuffData Data;
                 
         // Realtime Data
-        [field: SerializeField] public bool CheckPointPassed;
+        [field: SerializeField] public BaseObject Caster;
+        [field: SerializeField] public bool CheckPointPassed = false;
         [field: SerializeField] public int CurrentStack;
         [field: SerializeField] public int DurationLeft;
-
+        public Dictionary<string, float> PropertyDict;
         public Buff(BuffData data, int stack)
         {
             Data = data;
             CurrentStack = stack <= data.MaxStack ? stack : data.MaxStack;
             DurationLeft = data.Duration;
+            PropertyDict = new Dictionary<string, float>();
         }
         
-        public static Dictionary<string, float> StrToBuffProperty(string str)
+        /*public static Dictionary<string, float>[] ExtractBuffDict(ActionDetail ad)
         {
-            Dictionary<string, float> dict = new Dictionary<string, float>();
-            string[] strs = str.Split(',');
-            foreach (string s in strs)
+            var bds = ad.Data.BuffDataList;
+            var dicts = new Dictionary<string, float>[bds.Length];
+
+            for (var i = 0; i < bds.Length; i++)
             {
-                string[] ss = s.Split(':');
-                dict.Add(ss[0].Trim(), float.Parse(ss[1]));
+                var buffData = bds[i];
+                var buffStrs = buffData.BuffProperties;
+
+                foreach (string s in buffStrs)
+                {
+                    string[] ss = s.Split(':');
+                    var propName = ss[0].Trim();
+                    var value = 0f;
+                    var valueStr = ss[1].Split("%", '<');
+                    if (valueStr.Length > 1)
+                    {
+                        // 当具有表达式属性时，其中数字一定代表百分比
+                        // propName: value = (propName < (propName@value
+                        // CritDamage: 13.2 (CritDamage
+                        // Attack%: 25 < (Attack@50
+                        // Attack: 40 = )Shield < )AttackFixed@60
+                        // $ => %, @ => :
+                        // ( => 施加方属性
+                        // ) => 目标属性
+                        // < expression => 最大不超过 expression
+                    }
+                    else
+                    {
+                        value = float.Parse(valueStr[0]);
+                    }
+
+                    if (dicts[i].ContainsKey(propName))
+                    {
+                        dicts[i][propName] += value;
+                    }
+                    else
+                    {
+                        dicts[i][propName] = value;
+                    }
+                }
             }
 
-            return dict;
-        }
-        public static BuffProperty TranslateBuffString(string str)
+
+            return dicts;
+        }*/
+        /*public static BuffProperty TranslateBuffString(string str)
         {
             if (Enum.TryParse(str, out BuffProperty property))
             {
@@ -45,7 +84,7 @@ namespace Script.BuffLogic
                 Debug.LogError("Unknown BuffProperty String Error: " + str);
                 return BuffProperty.None;
             }
-        }
+        }*/
     }
 }
 

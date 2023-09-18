@@ -742,9 +742,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <BaseData>k__BackingField: {fileID: 11400000, guid: fbedc1b0b4875e0419b55ff8ff01fa8e, type: 2}
   isAlive: 1
-  BuffList: []
-  DoTList: []
-  CtrlList: []
   <Position>k__BackingField: 2
   _currentAction:
     UAID: 0
@@ -1008,9 +1005,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <BaseData>k__BackingField: {fileID: 11400000, guid: 02aad0ad6bb25ec43966b37336a2ab20, type: 2}
   isAlive: 1
-  BuffList: []
-  DoTList: []
-  CtrlList: []
   <Position>k__BackingField: 3
   _currentAction:
     UAID: 0
@@ -1026,6 +1020,8 @@ MonoBehaviour:
   <SkillAttackData>k__BackingField: {fileID: 11400000, guid: e937d56d148822c40913239b517a7b69, type: 2}
   <UltimateData>k__BackingField: {fileID: 11400000, guid: b9929ee8b19469d43bf8176de2eb5942, type: 2}
   CommandState: 0
+  SkillBuff: {fileID: 0}
+  UltimateBuff: {fileID: 0}
 --- !u!1001 &1495505093
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1103,9 +1099,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <BaseData>k__BackingField: {fileID: 11400000, guid: 1844d82c507708948af1d89ab1648bfd, type: 2}
   isAlive: 1
-  BuffList: []
-  DoTList: []
-  CtrlList: []
   <Position>k__BackingField: 4
   _currentAction:
     UAID: 0
@@ -1260,9 +1253,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <BaseData>k__BackingField: {fileID: 11400000, guid: 031263e0fd35f9f44b5ec84a528edfab, type: 2}
   isAlive: 1
-  BuffList: []
-  DoTList: []
-  CtrlList: []
   <Position>k__BackingField: 1
   _currentAction:
     UAID: 0
@@ -1283,7 +1273,7 @@ MonoBehaviour:
   counterData: {fileID: 11400000, guid: c452b2ccdf4081d4eb05316316fa3d9a, type: 2}
   enhancedCounterData: {fileID: 11400000, guid: db7a04828cbaa4048b259008c68bc3d0, type: 2}
   skillOnFlagData: {fileID: 11400000, guid: c8ad8043e0903df48b307b2171dabf37, type: 2}
-  OnSpawnBuff: {fileID: 11400000, guid: a3d1617d0682eb448900bdbe0097d914, type: 2}
+  OnSpawnBuffActionData: {fileID: 11400000, guid: d0f527819aa8f574ca02d019c2eaad7e, type: 2}
 --- !u!1 &1908942969
 GameObject:
   m_ObjectHideFlags: 0
