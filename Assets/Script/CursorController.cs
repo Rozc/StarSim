@@ -7,7 +7,7 @@ public class CursorController : MonoBehaviour
 {
 
     private Renderer render;
-    public int CurrentPosition { get; private set; }
+    private bool _enabled = true;
 
     // Start is called before the first frame update
     void Start()
@@ -23,13 +23,20 @@ public class CursorController : MonoBehaviour
     }
     
 
-    public void Show()
+    public void Show(bool main, bool friendly)
     {
         render ??= GetComponent<Renderer>();
+        transform.localScale = main 
+            ? new Vector3(0.5f, 1f, 0.5f) 
+            : new Vector3(0.25f, 1f, 0.25f);
+        render.material.color = friendly
+            ? Color.blue
+            : Color.red;
         render.enabled = true;
     }
     public void Hide()
     {
+        if (!_enabled) return;
         render ??= GetComponent<Renderer>();
         render.enabled = false;
     }

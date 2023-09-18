@@ -150,7 +150,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: isAlive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_Name
@@ -454,6 +454,10 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: ActID
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
+      propertyPath: isAlive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_Name
@@ -1138,6 +1142,8 @@ MonoBehaviour:
   HiddenHand: 0
   EnhancedBasicAttackData: {fileID: 11400000, guid: b4a36c25bb9dab541be45d9dc5ac1fa2, type: 2}
   HiddenHandData: {fileID: 11400000, guid: 18d0c6a3e0a194a479eff41937375e23, type: 2}
+  AutarkyBasicData: {fileID: 11400000, guid: 6736ad96175b9c74283590ea4a3fd279, type: 2}
+  AutarkyEnhancedData: {fileID: 11400000, guid: 817bfd4ba99dc034abef2292230d006c, type: 2}
 --- !u!1 &1545050020 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1470077304936829578, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
@@ -1167,6 +1173,10 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: ActID
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
+      propertyPath: isAlive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_Name
@@ -1353,7 +1363,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: isAlive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_Name

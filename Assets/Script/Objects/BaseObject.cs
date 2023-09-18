@@ -341,41 +341,23 @@ namespace Script.Objects
             }
         }
         
-        public void GetCursor(CursorController cursorMain, CursorController cursorSub)
-        {
-            _cursorMain = cursorMain;
-            _cursorSub = cursorSub;
-            var position = transform.position;
-            cursorMain.transform.position = position;
-            cursorSub.transform.position = position;
-        }
-        
-        public void ShowCursor(bool show, bool main = true)
-        {
-            if (!show)
-            {
-                _cursorMain.Hide();
-                _cursorSub.Hide();
-                return;
-            }
-            if (main)
-            {
-                _cursorMain.Show();
-                _cursorSub.Hide();
-            }
-            else
-            {
-                _cursorMain.Hide();
-                _cursorSub.Show();
-            }
-        }
         public bool TryGetLeft(out BaseObject obj)
         {
-            return GM.PosDict.TryGetValue(Position - 1, out obj);
+            if (GM.PosDict.TryGetValue(Position - 1, out obj))
+            {
+                return obj.isAlive || obj.TryGetLeft(out obj);
+            }
+
+            return false;
         }
         public bool TryGetRight(out BaseObject obj)
         {
-            return GM.PosDict.TryGetValue(Position + 1, out obj);
+            if (GM.PosDict.TryGetValue(Position + 1, out obj))
+            {
+                return obj.isAlive || obj.TryGetRight(out obj);
+            }
+
+            return false;
         }
         
 

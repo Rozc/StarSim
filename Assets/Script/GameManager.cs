@@ -36,7 +36,6 @@ public class GameManager : SingletonBase<GameManager>
     private BaseObject _currentActionOf;
     private Action _currentAction;
     private int _currentUAID;
-    private TargetForm _currentTargetForm;
     
     public BaseObject CurrentTarget => PosDict[_targetSelector.CurrentPosition];
     
@@ -83,26 +82,29 @@ public class GameManager : SingletonBase<GameManager>
         UI.SetInteractable(ButtonID.BattleStart, false);
         // TargetCursor.Initialize();
         // 给所有对象分配光标
-        GameObject cursorMain = Resources.Load<GameObject>("Prefab/CursorMain");
-        GameObject cursorSub = Resources.Load<GameObject>("Prefab/CursorSub");
-        foreach (var obj in ObjDict.Values)
-        {
-            
-            obj.GetCursor(
-                Object.Instantiate(cursorMain, obj.transform, false).GetComponent<CursorController>(),
-                Object.Instantiate(cursorSub, obj.transform, false).GetComponent<CursorController>()
-                );
-        }
-
+        GameObject cursorMain = Resources.Load<GameObject>("Prefab/Cursor");
         _targetSelector = new TargetSelector();
         
+        foreach (var obj in ObjDict.Values)
+        {
+            var cursor = Object.Instantiate(cursorMain, obj.transform, false)
+                .GetComponent<CursorController>();
+            cursor.transform.position = obj.transform.position;
+            _targetSelector.GetCursor(obj.Position, cursor);
+
+        }
+        // TODO 目标死亡时移除 TargetSelector 里的 Cursor，新目标加入时添加 Cursor
+        _targetSelector.Disable();
+        
         EC.SubscribeEvent(EventID.ActionValueUpdate, EventUpdateTurnQ);
-        // 这里可以处理一些秘技等战斗初始化动作
+        
         
         BattleInit();
     }
+    
+    // ===================================== Battle Process =============================
 
-    private void BattleInit() // ��ʼ���ж����У������ƽ�����һ�������ж���ʱ���
+    private void BattleInit()
     {
         foreach (var obj in ObjDict.Values)
         {
@@ -110,8 +112,11 @@ public class GameManager : SingletonBase<GameManager>
         }
         foreach (var obj in ObjDict.Values)
         {
-            _turnQ.Push(obj); // �����ж�������ж�����
+            _turnQ.Push(obj);
         }
+        
+        // 这里可以处理一些秘技等战斗初始化动作
+        
         _turnQ.PushForward();
         UI.UpdateTurnQLabel();
         NextTurn();
@@ -137,9 +142,9 @@ public class GameManager : SingletonBase<GameManager>
         Action action = _actionQ.Top();
         _currentActionOf = ObjDict[action.Actor.Data.CharacterID];
         // TODO 重写调整 UI 和光标的逻辑
-        if (action.NeedInput)
+        if (action.ActionType is ActionType.Base or ActionType.Extra)
         {
-            _targetSelector.Available = true;
+            _targetSelector.Enable();
         }
         UI.UpdateActorName();
         UI.UpdateActQLabel();
@@ -153,7 +158,7 @@ public class GameManager : SingletonBase<GameManager>
         _targetSelector.Available = false;
         foreach (var o in PosDict.Values)
         {
-            o.ShowCursor(false);
+            _targetSelector.Disable();
         }
         UI.UpdateActorName();
         UI.UpdateActQLabel();
@@ -201,7 +206,7 @@ public class GameManager : SingletonBase<GameManager>
         NextTurn();
     }
 
-    // ===================================== Public 消息方法 =====================================
+    // ===================================== Public Message =====================================
 
     public void GetInputFromUI(KeyCode input)
     {
@@ -318,7 +323,7 @@ public class GameManager : SingletonBase<GameManager>
 
     public string GetActorName()
     {
-        return _currentActionOf.BaseData.Name;
+        return _currentActionOf.Data.Name;
     }
 
     // ===================================== Private =====================================
@@ -331,84 +336,42 @@ public class GameManager : SingletonBase<GameManager>
     {
         _turnQ.Update(sender.Data.CharacterID);
     }
+    
+    
+    
+    // =========================== Target Selection and Cursor ===========================
     private void TryMoveCursor(KeyCode k)
     {
         if (!_targetSelector.Available) return;
-        var current = CurrentTarget;
+        
         switch (k)
         {
             case KeyCode.A:
-                _targetSelector.Move(-1);
+                _targetSelector.Move(true);
                 break;
             case KeyCode.D:
-                _targetSelector.Move(1);
+                _targetSelector.Move(false);
                 break;
         }
         // 当一个目标被选中后，清除所有其他目标的光标，并根据当前的目标形式重设光标
-        SetCursorTarget(CurrentTarget, _currentTargetForm);
+        
         
     }
     public void SetCursorForm(TargetForm targetForm, TargetSide targetSide)
     {
         // 根据技能的目标形式和目标阵营调整光标
-        // 调整后若阵营不变，则主光标指向原目标，否则指向对应阵营的第一个目标，即 Position 最小的
-        _currentTargetForm = targetForm;
-        switch (targetSide)
-        {
-            case TargetSide.Enemy:
-                _targetSelector.SelectingEnemyTarget();
-                foreach (var o in FriendlyObjects)
-                {
-                    o.ShowCursor(false);
-                }
-                break;
-            case TargetSide.Friendly:
-                _targetSelector.SelectingFriendlyTarget();
-                foreach (var o in EnemyObjects)
-                {
-                    o.ShowCursor(false);
-                }
-                break;
-            default:
-                _targetSelector.Available = false;
-                return;
-        }
-        SetCursorTarget(CurrentTarget, targetForm);
+        // 调整后若阵营不变，则主光标指向原目标，否则指向对应阵营的目标缓存
+        _targetSelector.SetCursorForm(targetForm, targetSide);
         
     }
 
-    private void SetCursorTarget(BaseObject target, TargetForm targetForm)
+    public void TargetLock(BaseObject target)
     {
-        bool friendly = (target is Friendly);
-        IEnumerable<BaseObject> list = friendly ? FriendlyObjects : EnemyObjects;
-        foreach (var o in list)
-        {
-            o.ShowCursor(false);
-        }
-        switch (targetForm)
-        {
-            case TargetForm.Single:
-                CurrentTarget.ShowCursor(true, true);
-                break;
-            case TargetForm.Blast:
-                CurrentTarget.ShowCursor(true, true);
-                if (CurrentTarget.TryGetLeft(out var a)) a.ShowCursor(true, false);
-                if (CurrentTarget.TryGetRight(out a)) a.ShowCursor(true, false);
-                break;
-            case TargetForm.Bounce:
-            case TargetForm.Aoe:
-                CurrentTarget.ShowCursor(true, true);
-                foreach (var b in list.Where(b => b.Position != CurrentTarget.Position))
-                {
-                    b.ShowCursor(true, targetForm == TargetForm.Aoe);
-                }
-                break;
-            default:
-                _targetSelector.Available = false;
-                return;
-        }
+        
     }
     
+    
+    // ================================== Other ==================================
     private void ClearCurrentObject()
     {
         // �����ǰ�ж�����

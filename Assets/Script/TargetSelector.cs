@@ -1,5 +1,8 @@
 
 
+using System.Collections.Generic;
+using System.Linq;
+using Script.Enums;
 using Script.Objects;
 using Script.Tools;
 using UnityEngine;
@@ -8,53 +11,142 @@ namespace Script
 {
     public class TargetSelector : SingletonBase<TargetSelector>
     {
-
+        public int CurrentPosition = 6;
+        public bool Available = true;
+        
+        private Dictionary<int, CursorController> _cursorDict = new();
         private int _cachedPositionEnemy = 6;
         private int _cachedPositionFriendly = 1;
-        private bool _currentSelecingFriendly = false;
-        public int CurrentPosition = 6;
-        public bool Available = false;
+        private bool _isSelectingFriendly = false;
+        private TargetForm _currentTargetForm;
+        private GameManager GM = GameManager.Instance;
 
-        public void Move(int direction)
+        public void Move(bool left)
         {
-            while (true)
+            if (!Available) return;
+            if (left && GM.PosDict[CurrentPosition].TryGetLeft(out var obj))
             {
-                // 移动时检测要移动的方向是否还有目标, 查看 GM 的列表
-                if (GameManager.Instance.PosDict.TryGetValue(CurrentPosition + direction, out BaseObject obj))
-                {
-                    if (!obj.isAlive)
-                    {
-                        // 如果目标已经倒下, 则继续检测下一个目标
-                        direction = direction + (int)Mathf.Sign(direction);
-                        continue;
-                    }
-
-                    CurrentPosition += direction;
-                }
-                if (_currentSelecingFriendly) _cachedPositionFriendly = CurrentPosition;
-                else _cachedPositionEnemy = CurrentPosition;
-                break;
+                MoveTo(obj, _isSelectingFriendly);
+            }
+            else if (!left && GM.PosDict[CurrentPosition].TryGetRight(out obj))
+            {
+                MoveTo(obj, _isSelectingFriendly);
             }
         }
 
-        // TODO 以下两个方法需要检查 cache 是否有效，以避免目标退场导致的位置空缺
-        public void SelectingFriendlyTarget()
+        public void SetCursorForm(TargetForm targetForm, TargetSide targetSide)
         {
-            if (_currentSelecingFriendly) return;
-            _currentSelecingFriendly = true;
-            CurrentPosition = _cachedPositionFriendly;
-        }
+            if (!Available) return;
+            if (targetForm == TargetForm.None) return;
 
-        public void SelectingEnemyTarget()
-        {
-            if (!_currentSelecingFriendly) return;
-            _currentSelecingFriendly = false;
-            CurrentPosition = _cachedPositionEnemy;
+            if ((targetSide == TargetSide.Friendly) == _isSelectingFriendly)
+            {
+                // 阵营不变
+                MoveTo(GM.PosDict[CurrentPosition], _isSelectingFriendly, targetForm);
+            }
+            else
+            {
+                if (_isSelectingFriendly)
+                {
+                    _cachedPositionFriendly = CurrentPosition;
+                    MoveTo(GM.PosDict[_cachedPositionEnemy], false, targetForm);
+                }
+                else
+                {
+                    _cachedPositionEnemy = CurrentPosition;
+                    MoveTo(GM.PosDict[_cachedPositionFriendly], true, targetForm);
+                }
+            }
         }
-
-        public void MoveTo(BaseObject obj)
+        public void MoveTo(BaseObject obj, bool isFriendly, TargetForm targetForm = TargetForm.None)
         {
+            if(!Available) return;
+            if (!_cursorDict.TryGetValue(obj.Position, out var cursor)) return;
+            if (targetForm != TargetForm.None) _currentTargetForm = targetForm;
+            if (_currentTargetForm == TargetForm.None) return;
+
+            if (_isSelectingFriendly != isFriendly)
+            {
+                if (_isSelectingFriendly)
+                {
+                    _cachedPositionFriendly = CurrentPosition;
+                }
+                else
+                {
+                    _cachedPositionEnemy = CurrentPosition;
+                }
+            }
             
+            _isSelectingFriendly = isFriendly;
+            DisableAllCursor();
+            cursor.Show(true, _isSelectingFriendly);
+            CurrentPosition = obj.Position;
+            
+            switch (_currentTargetForm)
+            {
+                case TargetForm.Single:
+                    break;
+                case TargetForm.Blast:
+                    if (obj.TryGetLeft(out var o) && _cursorDict.TryGetValue(o.Position, out cursor))
+                    {
+                        cursor.Show(false, _isSelectingFriendly);
+                    }
+
+                    if (obj.TryGetRight(out o) && _cursorDict.TryGetValue(o.Position, out cursor))
+                    {
+                        cursor.Show(false, _isSelectingFriendly);
+                    }
+
+                    break;
+                case TargetForm.Bounce:
+                case TargetForm.Aoe:
+                    if (_isSelectingFriendly)
+                    {
+                        var list = GM.FriendlyObjects;
+                        foreach (var of in list.Where(o => o.Position != CurrentPosition))
+                        {
+                            _cursorDict[of.Position].Show(_currentTargetForm == TargetForm.Aoe, true);
+                        }
+                    }
+                    else
+                    {
+                        var list = GM.EnemyObjects;
+                        foreach (var oe in list.Where(o => o.Position != CurrentPosition))
+                        {
+                            _cursorDict[oe.Position].Show(_currentTargetForm == TargetForm.Aoe, false);
+                        }
+                    }
+
+                    break;
+                default:
+                    Debug.LogError("Unknown Target Form!");
+                    break;
+            }
+        }
+
+        private void DisableAllCursor()
+        {
+            foreach (var cursor in _cursorDict.Values)
+            {
+                cursor.Hide();
+            }
+        }
+        
+
+        public void GetCursor(int pos, CursorController cursor)
+        {
+            _cursorDict.Add(pos, cursor);
+        }
+
+        public void Enable()
+        {
+            Available = true;
+        }
+
+        public void Disable()
+        {
+            Available = false;
+            DisableAllCursor();
         }
         
     }
