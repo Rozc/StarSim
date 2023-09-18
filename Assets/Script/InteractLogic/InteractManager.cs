@@ -1,3 +1,4 @@
+using System.Reflection;
 using Script.BuffLogic;
 using Script.Enums;
 using Script.Objects;
@@ -59,8 +60,10 @@ namespace Script.InteractLogic
                             }
                             
                             // 命中，数值计算
-                            
-                            buffs[i] = new Buff(buffData, buffData.StackAtATime);
+                            buffs[i] = new Buff(buffData, buffData.StackAtATime)
+                            {
+                                Caster = ad.Actor
+                            };
                             foreach (var prop in buffData.BuffPropertyList)
                             {
                                 buffs[i].PropertyDict.TryAdd(prop.propName, 0);
@@ -85,6 +88,17 @@ namespace Script.InteractLogic
                                     value = Mathf.Max(value, min);
                                 }
                                 buffs[i].PropertyDict[prop.propName] += value;
+                            }
+                            
+                            // 处理 CallBack
+                            if (buffData.HasCallBack)
+                            {
+                                foreach (var cb in buffData.CallBackList)
+                                {
+                                    var mt = ad.Actor.GetType().GetMethod(cb);
+                                    if (mt != null) mt.Invoke(ad.Actor, new object[] { ad.Target });
+                                    else Debug.LogError("No Such Callback Method: " + cb + " in " + ad.Actor.Data.Name);
+                                }
                             }
                         }
                         ad.Target.ReceiveBuff(buffs);

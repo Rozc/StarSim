@@ -173,9 +173,13 @@ public class GameManager : SingletonBase<GameManager>
         // 如果是主行动结束，那就要更新回合队列
         if (_currentAction.ActionType == ActionType.Base)
         {
-            _currentActionOf.GetMessageFromGM(Message.MainActionDone);
+            _currentActionOf.GetMessageFromGM(Message.MainActionEnd);
             _turnQ.MoveHeadToTail(10000 * 100);
             UI.UpdateTurnQLabel();
+        }
+        else
+        {
+            _currentActionOf.GetMessageFromGM(Message.ActionEnd);
         }
         ClearCurrentObject();
         if (_actionQ.Count > 0)

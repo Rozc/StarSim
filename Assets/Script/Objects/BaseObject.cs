@@ -137,8 +137,13 @@ namespace Script.Objects
             {
                 buff.CheckPointPassed = true;
             }
+            EC.TriggerEvent(EventID.ActionEnd, this);
         }
-        protected virtual void OnActionEnd() {}
+
+        protected virtual void OnActionEnd()
+        {
+            EC.TriggerEvent(EventID.ActionEnd, this);
+        }
 
         protected virtual void OnTurnEnd()
         {
@@ -316,10 +321,10 @@ namespace Script.Objects
                 case Message.ActionBegin:
                     OnActionBegin();
                     break;
-                case Message.MainActionDone:
+                case Message.MainActionEnd:
                     OnMainActionEnd();
                     break;
-                case Message.ActionDone:
+                case Message.ActionEnd:
                     OnActionEnd();
                     break;
                 case Message.TurnEnd:

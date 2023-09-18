@@ -6,6 +6,7 @@ namespace Script.Enums
         Spawn,
         TurnBegin,
         ActionBegin,
+        MainActionEnd,
         ActionEnd,
         TurnEnd,
         Death,

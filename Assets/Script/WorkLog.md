@@ -297,8 +297,10 @@ Buff 的数值主要有 5 部分
 4. 基于施加方的某个数值作为上限
 5. 基于施加方的某个数值作为下限
 
-Fixed + Percent + PercentOfSender + PercentOfSenderAsUpperLimit + PercentOfSenderAsLowerLimit
-CritDamage: 14.4 + 0 + 13.2@CritDamage(
-Attack%: 25 < 50@Attack(
-要不然就给角色脚本算吧。。
-Buff 也不抽象出来做成数据了，直接写在角色脚本里吧，反正也不多
+### DoT 和 控制类负面效果
+
+作为 Debuff 的一部分，这两种 Debuff 与其他 Debuff 存在明显的区别
+
+DoT 和控制类负面效果需要在 TurnBegin 阶段结算，并且
+都属于瞬时效果，如造成伤害，或者直接跳过行动
+在结算过后如果持续时间为 0 则立即移除

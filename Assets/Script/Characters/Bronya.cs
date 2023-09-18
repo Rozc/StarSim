@@ -3,14 +3,14 @@ using Script.Data;
 using Script.Enums;
 using Script.InteractLogic;
 using Script.Objects;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 namespace Script.Characters
 {
     public class Bronya : Friendly
     {
-        [field: SerializeField] private BuffData SkillBuff;
-        [field: SerializeField] private BuffData UltimateBuff;
+        [field: SerializeField] private ActionDataBase SkillCallBackAction;
         
         protected override void BasicAttack()
         {
@@ -36,6 +36,22 @@ namespace Script.Characters
             SetTarget(null, true, true);
             ActionDetail ad = new ActionDetail(this, _target, UltimateData);
             base.Ultimate();
+        }
+
+        
+        private BaseObject _lastSkillTarget = null;
+        public void CallBackSkillBuff(BaseObject target)
+        {
+            _lastSkillTarget = target;
+            EC.SubscribeEvent(EventID.ActionEnd, SkillTargetActionEnd);
+        }
+
+        private void SkillTargetActionEnd(BaseObject sender, BaseObject _)
+        {
+            if (sender != _lastSkillTarget) return;
+            EC.UnsubscribeEvent(EventID.ActionEnd, SkillTargetActionEnd);
+            ActionDetail ad = new ActionDetail(this, sender, SkillCallBackAction);
+            IM.Process(ad);
         }
     }
 }

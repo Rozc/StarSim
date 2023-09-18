@@ -741,6 +741,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <BaseData>k__BackingField: {fileID: 11400000, guid: fbedc1b0b4875e0419b55ff8ff01fa8e, type: 2}
+  <Data>k__BackingField:
+    <CharacterID>k__BackingField: 0
+    <Name>k__BackingField: 
+    <Level>k__BackingField: 0
+    <BattleType>k__BackingField: 0
+    <Path>k__BackingField: 0
+    BuffList: []
   isAlive: 1
   <Position>k__BackingField: 2
   _currentAction:
@@ -1004,6 +1011,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <BaseData>k__BackingField: {fileID: 11400000, guid: 02aad0ad6bb25ec43966b37336a2ab20, type: 2}
+  <Data>k__BackingField:
+    <CharacterID>k__BackingField: 0
+    <Name>k__BackingField: 
+    <Level>k__BackingField: 0
+    <BattleType>k__BackingField: 0
+    <Path>k__BackingField: 0
+    BuffList: []
   isAlive: 1
   <Position>k__BackingField: 3
   _currentAction:
@@ -1020,8 +1034,7 @@ MonoBehaviour:
   <SkillAttackData>k__BackingField: {fileID: 11400000, guid: e937d56d148822c40913239b517a7b69, type: 2}
   <UltimateData>k__BackingField: {fileID: 11400000, guid: b9929ee8b19469d43bf8176de2eb5942, type: 2}
   CommandState: 0
-  SkillBuff: {fileID: 0}
-  UltimateBuff: {fileID: 0}
+  SkillCallBackAction: {fileID: 11400000, guid: 9dd7c7d23ef4833499e8e153d3a7190f, type: 2}
 --- !u!1001 &1495505093
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1098,6 +1111,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <BaseData>k__BackingField: {fileID: 11400000, guid: 1844d82c507708948af1d89ab1648bfd, type: 2}
+  <Data>k__BackingField:
+    <CharacterID>k__BackingField: 0
+    <Name>k__BackingField: 
+    <Level>k__BackingField: 0
+    <BattleType>k__BackingField: 0
+    <Path>k__BackingField: 0
+    BuffList: []
   isAlive: 1
   <Position>k__BackingField: 4
   _currentAction:
@@ -1252,6 +1272,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <BaseData>k__BackingField: {fileID: 11400000, guid: 031263e0fd35f9f44b5ec84a528edfab, type: 2}
+  <Data>k__BackingField:
+    <CharacterID>k__BackingField: 0
+    <Name>k__BackingField: 
+    <Level>k__BackingField: 0
+    <BattleType>k__BackingField: 0
+    <Path>k__BackingField: 0
+    BuffList: []
   isAlive: 1
   <Position>k__BackingField: 1
   _currentAction:

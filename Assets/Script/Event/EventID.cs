@@ -7,11 +7,16 @@ namespace Script.Enums
         Dead,
         HPDownTo50Precent,
         WeaknessBroken,
-        NormalAttack,
+        BasicAttack,
         SkillAttack,
         UltimateAttack,
         ObjectOnHit,
         ObjectOnHeal,
-        ActionValueUpdate
+        ActionValueUpdate,
+        TurnBegin,
+        ActionBegin,
+        MainActionEnd,
+        ActionEnd,
+        TurnEnd,
     }
 }
