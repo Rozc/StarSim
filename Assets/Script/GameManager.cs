@@ -365,9 +365,19 @@ public class GameManager : SingletonBase<GameManager>
         
     }
 
-    public void TargetLock(BaseObject target)
+    public void MoveCursorTo(BaseObject obj)
     {
-        
+        _targetSelector.MoveTo(obj, obj is Friendly);
+    }
+
+    /// <summary>
+    /// 调用该函数后，光标会锁定目标，不再响应移动指令，直到调用 SetCursorForm 解锁
+    /// </summary>
+    /// <param name="obj"></param>
+    public void TargetLock(BaseObject obj)
+    {
+        MoveCursorTo(obj);
+        _targetSelector.Lock();
     }
     
     

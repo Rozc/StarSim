@@ -165,15 +165,12 @@ namespace Script.Characters
                     break;
                 case (ActionType.Base, CommandStatus.BasicAttack, KeyCode.E):
                 case (ActionType.Extra, CommandStatus.BasicAttack, KeyCode.E):
-                    CommandState = CommandStatus.SkillAttack;
-                    UI.SetInteractable(ButtonID.BasicAttack, true);
-                    UI.SetInteractable(ButtonID.SkillAttack, false);
+                    ReadyTo(CommandStatus.SkillAttack);
+                    GM.TargetLock(this);
                     break;
                 case (ActionType.Base, CommandStatus.SkillAttack, KeyCode.Q):
                 case (ActionType.Extra, CommandStatus.SkillAttack, KeyCode.Q):
-                    CommandState = CommandStatus.BasicAttack;
-                    UI.SetInteractable(ButtonID.BasicAttack, false);
-                    UI.SetInteractable(ButtonID.SkillAttack, true);
+                    ReadyTo(CommandStatus.BasicAttack);
                     break;
                 case (ActionType.Base, CommandStatus.SkillAttack, KeyCode.E):
                 case (ActionType.Base, CommandStatus.SkillAttack, KeyCode.Space):
@@ -204,22 +201,20 @@ namespace Script.Characters
             }
 
             _currentAction = action;
-            if (action.ActionType is ActionType.Extra && action.ExtraActCode == 1)
+            switch (action.ActionType)
             {
-                UI.SetInteractable(ButtonID.SkillAttack, false);
-                CommandState = CommandStatus.SkillAttack;
-            }
-            else if (action.ActionType is ActionType.Followup && action.ExtraActCode == 2)
-            {
-                ShowHiddenHand();
-            }
-            else if (action.ActionType is ActionType.Followup && action.ExtraActCode == 3)
-            {
-                Autarky();
-            }
-            else
-            {
-                base.GetAction(action);
+                case ActionType.Extra when action.ExtraActCode == 1:
+                    ReadyTo(CommandStatus.SkillAttack);
+                    break;
+                case ActionType.Followup when action.ExtraActCode == 2:
+                    ShowHiddenHand();
+                    break;
+                case ActionType.Followup when action.ExtraActCode == 3:
+                    Autarky();
+                    break;
+                default:
+                    base.GetAction(action);
+                    break;
             }
             
             OnActionBegin();

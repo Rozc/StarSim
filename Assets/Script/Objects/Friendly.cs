@@ -105,7 +105,6 @@ namespace Script.Objects
             switch (_currentAction.ActionType)
             {
                 case ActionType.Base:
-                    CommandState = CommandStatus.BasicAttack;
                     ReadyTo(CommandStatus.BasicAttack);
                     break;
                 case ActionType.Extra: // Here Only Ultimate
@@ -113,7 +112,6 @@ namespace Script.Objects
                     {
                         // Debug.LogError(Data.BaseData.Name + " Get Action Error: Extra Action except Ultimate should be handled in Child Class!");
                     }
-                    CommandState = CommandStatus.Release;
                     ReadyTo(CommandStatus.Release);
                     break;
                 case ActionType.Followup:

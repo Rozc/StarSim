@@ -19,11 +19,12 @@ namespace Script
         private int _cachedPositionFriendly = 1;
         private bool _isSelectingFriendly = false;
         private TargetForm _currentTargetForm;
+        private bool _locked;
         private GameManager GM = GameManager.Instance;
 
         public void Move(bool left)
         {
-            if (!Available) return;
+            if (!Available || _locked) return;
             if (left && GM.PosDict[CurrentPosition].TryGetLeft(out var obj))
             {
                 MoveTo(obj, _isSelectingFriendly);
@@ -39,6 +40,8 @@ namespace Script
             if (!Available) return;
             if (targetForm == TargetForm.None) return;
 
+            _locked = false;
+            
             if ((targetSide == TargetSide.Friendly) == _isSelectingFriendly)
             {
                 // 阵营不变
@@ -60,7 +63,7 @@ namespace Script
         }
         public void MoveTo(BaseObject obj, bool isFriendly, TargetForm targetForm = TargetForm.None)
         {
-            if(!Available) return;
+            if(!Available || _locked) return;
             if (!_cursorDict.TryGetValue(obj.Position, out var cursor)) return;
             if (targetForm != TargetForm.None) _currentTargetForm = targetForm;
             if (_currentTargetForm == TargetForm.None) return;
@@ -122,6 +125,11 @@ namespace Script
                     Debug.LogError("Unknown Target Form!");
                     break;
             }
+        }
+
+        public void Lock()
+        {
+            _locked = true;
         }
 
         private void DisableAllCursor()

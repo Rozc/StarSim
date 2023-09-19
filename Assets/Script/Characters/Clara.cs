@@ -32,10 +32,18 @@ namespace Script.Characters
                 Debug.LogError( "Clara Get Action Error: Not My Action! Actor ID: " + action.Actor.Position + " My ID: " + Position);
                 return;
             }
+            
             if (action.ActionType == ActionType.Followup)
             {
                 _currentAction = action;
                 Counter();
+            }
+            else if (action.ActionType == ActionType.Extra && action.ExtraActCode == 0)
+            {
+                // Ultimate
+                _currentAction = action;
+                ReadyTo(CommandStatus.Release);
+                GM.TargetLock(this);
             }
             else
             {
