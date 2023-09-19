@@ -13,26 +13,27 @@ namespace Script.Data
         [field: SerializeField] public string Description { get; protected set; }
         
         [field: SerializeField] public BuffType BuffType { get; protected set; }
+        [field: SerializeField] public bool TriggerAtTurnBegin { get; protected set; }
         [field: SerializeField] public bool DurationBaseOnTurn { get; protected set; }
         [field: SerializeField] public int Duration { get; protected set; }
         [field: SerializeField] public bool Stackable { get; protected set; }
-        [field: SerializeField] public int StackAtATime { get; protected set; }
-        [field: SerializeField] public int MaxStack { get; protected set; }        
+        [field: SerializeField] public int StackAtATime { get; protected set; } = 1;
+        [field: SerializeField] public int MaxStack { get; protected set; } = 1;       
         [field: SerializeField] public bool NeedToBeRemovedFirst { get; protected set; }
 
         [field: SerializeField] public bool CheckAtTurnBegin { get; protected set; }
         [field: SerializeField] public bool CheckAtMainActionEnd { get; protected set; }
         [field: SerializeField] public bool MustBeRemovedAtTurnEnd { get; protected set; }
+
+        [field: SerializeField] public bool FixedProbability { get; protected set; } = true;
+        [field: SerializeField] public float Probability { get; protected set; } = 100;
         
-        [field: SerializeField] public float Probability { get; protected set; }
-        [field: SerializeField] public bool FixedProbability { get; protected set; }
         
         // TODO: Add Icon 
         
         [field: SerializeField] public bool HasCallBack { get; protected set; }
         [field: SerializeField] public string[] CallBackList { get; protected set; }
         [field: SerializeField] public bool HasProperty { get; protected set; }
-        // [field: SerializeField] public string[] BuffProperties { get; protected set; } 
         [field: SerializeField] public BuffProperty[] BuffPropertyList { get; protected set; }
     }
 }

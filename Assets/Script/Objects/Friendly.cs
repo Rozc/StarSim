@@ -39,8 +39,14 @@ namespace Script.Objects
             Act(UltimateData);
         }
 
-        protected virtual void Act(ActionDataBase data)
+        
+        protected virtual void Act(ActionDataBase data, 
+            ExtraLogic afterTargetSet = null, 
+            ExtraLogic afterActionPrepared = null,
+            ExtraLogic afterIMProcessed = null,
+            ExtraLogic afterInteractDone = null)
         {
+            _afterInteractDone = afterInteractDone;
             if (data.TargetForm == TargetForm.Aoe)
             {
                 SetTarget(null, true, data.TargetSide == TargetSide.Friendly);
@@ -49,10 +55,13 @@ namespace Script.Objects
             {
                 SetTarget(GM.CurrentTarget);
             }
+            afterTargetSet?.Invoke();
             ActionDetail ad = new ActionDetail(this, _target, data);
             GM.GetMessageFromActor(Message.ActionPrepared);
+            afterActionPrepared?.Invoke();
             IM.Process(ad);
-            DoAnimation(data.SkillType, data.TargetForm);
+            afterIMProcessed?.Invoke();
+            DoAnimation(data.SkillType, data.TargetForm, afterInteractDone);
         }
 
         public void AskUltimate()

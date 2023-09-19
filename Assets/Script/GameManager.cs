@@ -154,8 +154,6 @@ public class GameManager : SingletonBase<GameManager>
 
     private void InteractDone()
     {
-
-        _targetSelector.Disable();
         UI.UpdateActorName();
         UI.UpdateActQLabel();
         UI.UpdateTurnQLabel();
@@ -258,7 +256,7 @@ public class GameManager : SingletonBase<GameManager>
     {
         return PosDict[pos];
     }
-    public void GetMessageFromActor(Message msg, int SenderID = -1)
+    public void GetMessageFromActor(Message msg, int senderID = -1)
     {
         if (_currentActionOf is null)
         {
@@ -269,6 +267,7 @@ public class GameManager : SingletonBase<GameManager>
             case Message.ActionPrepared:
                 _state = GMStatus.WaitingActDone;
                 _currentAction = _actionQ.Pop();
+                _targetSelector.Disable();
                 break;
             case Message.InteractDone:
                 InteractDone();

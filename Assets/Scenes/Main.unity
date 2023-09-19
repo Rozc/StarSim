@@ -752,6 +752,7 @@ MonoBehaviour:
     <BattleType>k__BackingField: 0
     <Path>k__BackingField: 0
     BuffList: []
+  _cachedBuffList: []
   isAlive: 1
   <Position>k__BackingField: 2
   _currentAction:
@@ -760,14 +761,16 @@ MonoBehaviour:
     ActionType: 0
     Priority: 0
     Insertable: 0
-    NeedInput: 0
     ExtraActCode: 0
   MovingState: 0
   Distance: 0
   <BasicAttackData>k__BackingField: {fileID: 11400000, guid: 1cbdf53c58a92f945bdf0faf7c45fccc, type: 2}
-  <SkillAttackData>k__BackingField: {fileID: 0}
-  <UltimateData>k__BackingField: {fileID: 0}
+  <SkillAttackData>k__BackingField: {fileID: 11400000, guid: ce3cd46cd69ee7c4ea658e1b32e65080, type: 2}
+  <UltimateData>k__BackingField: {fileID: 11400000, guid: 187911d71ae97334e8b8be311834746d, type: 2}
   CommandState: 0
+  _currentStackOfAbyssFlower: 0
+  _isFieldActive: 0
+  _isAutoSkillInCD: 0
 --- !u!4 &1145393754 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8318039291929031294, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
@@ -1022,6 +1025,7 @@ MonoBehaviour:
     <BattleType>k__BackingField: 0
     <Path>k__BackingField: 0
     BuffList: []
+  _cachedBuffList: []
   isAlive: 1
   <Position>k__BackingField: 3
   _currentAction:
@@ -1030,7 +1034,6 @@ MonoBehaviour:
     ActionType: 0
     Priority: 0
     Insertable: 0
-    NeedInput: 0
     ExtraActCode: 0
   MovingState: 0
   Distance: 0
@@ -1122,6 +1125,7 @@ MonoBehaviour:
     <BattleType>k__BackingField: 0
     <Path>k__BackingField: 0
     BuffList: []
+  _cachedBuffList: []
   isAlive: 1
   <Position>k__BackingField: 4
   _currentAction:
@@ -1130,7 +1134,6 @@ MonoBehaviour:
     ActionType: 0
     Priority: 0
     Insertable: 0
-    NeedInput: 0
     ExtraActCode: 0
   MovingState: 0
   Distance: 0
@@ -1176,7 +1179,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: isAlive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_Name
@@ -1289,6 +1292,7 @@ MonoBehaviour:
     <BattleType>k__BackingField: 0
     <Path>k__BackingField: 0
     BuffList: []
+  _cachedBuffList: []
   isAlive: 1
   <Position>k__BackingField: 1
   _currentAction:
@@ -1297,7 +1301,6 @@ MonoBehaviour:
     ActionType: 0
     Priority: 0
     Insertable: 0
-    NeedInput: 0
     ExtraActCode: 0
   MovingState: 0
   Distance: 0

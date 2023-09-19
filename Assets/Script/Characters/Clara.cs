@@ -63,20 +63,18 @@ namespace Script.Characters
 
         protected override void SkillAttack()
         {
+            Act(SkillAttackData, afterIMProcessed: SkillAttackAttachment);
+        }
+
+        private void SkillAttackAttachment()
+        {
             // 对于具有反击标记的敌人，额外造成一次伤害，并清除其反击标记
             var ads = (from enemy in GM.EnemyObjects where enemy.HasBuff(1000103, out _)
                 select new ActionDetail(this, enemy, skillOnFlagData)).ToList();
-
-            // AoE
-            SetTarget(null, true);
-            ActionDetail ad = new ActionDetail(this, _target, SkillAttackData);
-            GM.GetMessageFromActor(Message.ActionPrepared);
-            IM.Process(ad);
             foreach (var aad in ads)
             {
                 IM.Process(aad);
             }
-            DoAnimation(SkillType.Attack, TargetForm.Aoe);
         }
 
 

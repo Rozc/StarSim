@@ -64,6 +64,8 @@ namespace Script.Objects
                     movingTargetPosition = primitivePosition;
                     MovingState = MovingStatus.MoveReturning;
                     GM.GetMessageFromActor(Message.InteractDone, Data.CharacterID);
+                    _afterInteractDone?.Invoke();
+                    _afterInteractDone = null;
                 }
                 else if (MovingState == MovingStatus.MoveReturning)
                 {
@@ -179,8 +181,12 @@ namespace Script.Objects
         
         // ====================================== Action ======================================
         public abstract void GetAction(Action action);
-        protected virtual void DoAnimation(SkillType skillType, TargetForm targetForm)
+        
+        protected delegate void ExtraLogic();
+        protected ExtraLogic _afterInteractDone = null;
+        protected virtual void DoAnimation(SkillType skillType, TargetForm targetForm, ExtraLogic afterInteractDone = null)
         {
+            _afterInteractDone = afterInteractDone;
             Debug.Log("        DoAction() of " 
                       + BaseData.Name + " | " 
                       + _currentAction.ActionType + " Action | " 

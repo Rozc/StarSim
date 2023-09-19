@@ -42,7 +42,6 @@ namespace Script.Characters
                 if (HiddenHand)
                 {
                     ReadyTo(CommandStatus.BasicAttack);
-                    GM.SetCursorForm(TargetForm.Blast, TargetSide.Enemy);
                 }
                 else if (CheckJade())
                 {
@@ -56,55 +55,38 @@ namespace Script.Characters
             }
             
         }
-        
+
+        protected override void OnTurnEnd()
+        {
+            base.OnTurnEnd();
+            HiddenHand = false;
+        }
+
         protected override void BasicAttack()
         {
-            SetTarget(GM.CurrentTarget);
-            ActionDetail ad;
             if (HiddenHand)
             {
                 RemoveAllJades();
-                ad = new ActionDetail(this, _target, EnhancedBasicAttackData);
             }
             else
             {
                 RemoveOneJade();
-                ad = new ActionDetail(this, _target, BasicAttackData);
             }
-            GM.GetMessageFromActor(Message.ActionPrepared);
-            IM.Process(ad);
-            bool autarky = HasBuff(1000002, out _);
-            if (autarky)
-            {
-                Action action = new Action(
-                    this,
-                    ActionType.Followup,
-                    ActionPriority.Qingque_Autarky,
-                    extraActCode:3);
-                GM.RequireExtraAction(action);
-            }
-            DoAnimation(SkillType.Attack, HiddenHand ? TargetForm.Blast : TargetForm.Single);
-            if (!autarky) HiddenHand = false;
+            
+            Act(HiddenHand ? EnhancedBasicAttackData : BasicAttackData, 
+                afterInteractDone: (HasBuff(1000002, out _)
+                    ? () => GM.RequireExtraAction(new Action(
+                        this,
+                        ActionType.Followup,
+                        ActionPriority.Qingque_Autarky,
+                        extraActCode:3)) 
+                    : null));
         }
+        
 
         private void Autarky()
         {
-            SetTarget(GM.CurrentTarget);
-            ActionDetail ad;
-            if (HiddenHand)
-            {
-                RemoveAllJades();
-                ad = new ActionDetail(this, _target, AutarkyEnhancedData);
-            }
-            else
-            {
-                RemoveOneJade();
-                ad = new ActionDetail(this, _target, AutarkyBasicData);
-            }
-            GM.GetMessageFromActor(Message.ActionPrepared);
-            IM.Process(ad);
-            DoAnimation(SkillType.Attack, HiddenHand ? TargetForm.Blast : TargetForm.Single);
-            HiddenHand = false;
+            Act(HiddenHand ? AutarkyEnhancedData : AutarkyBasicData);
         }
         protected override void SkillAttack()
         {
@@ -114,21 +96,13 @@ namespace Script.Characters
                 return;
             }
             CollectJades(2);
-
-            // Generate Extra Action
-            Action action = new (
+            
+            // 需要在 ActionPrepared 后插入 ExtraAction
+            Act(SkillAttackData, afterIMProcessed: () => GM.RequireExtraAction(new Action(
                 this,
                 ActionType.Extra,
                 ActionPriority.Qingque_ExtraAction,
-                1);
-            
-            // 需要在 ActionPrepared 后插入 ExtraAction，因此不能调用默认 Act 方法
-            SetTarget(this);
-            ActionDetail ad = new ActionDetail(this, this, SkillAttackData);
-            GM.GetMessageFromActor(Message.ActionPrepared);
-            IM.Process(ad);
-            GM.RequireExtraAction(action);
-            DoAnimation(SkillType.Enhance, TargetForm.Single);
+                1)));
 
         }
         protected override void Ultimate()
@@ -160,8 +134,14 @@ namespace Script.Characters
                     break;
                 case (ActionType.Base, CommandStatus.BasicAttack, KeyCode.E):
                 case (ActionType.Extra, CommandStatus.BasicAttack, KeyCode.E):
-                    ReadyTo(CommandStatus.SkillAttack);
-                    GM.TargetLock(this);
+                    if (HiddenHand)
+                    {
+                        Debug.Log("暂时无法使用战技");
+                    } else
+                    {
+                        ReadyTo(CommandStatus.SkillAttack);
+                        GM.TargetLock(this);
+                    }
                     break;
                 case (ActionType.Base, CommandStatus.SkillAttack, KeyCode.Q):
                 case (ActionType.Extra, CommandStatus.SkillAttack, KeyCode.Q):
@@ -200,6 +180,7 @@ namespace Script.Characters
             {
                 case ActionType.Extra when action.ExtraActCode == 1:
                     ReadyTo(CommandStatus.SkillAttack);
+                    GM.TargetLock(this);
                     break;
                 case ActionType.Followup when action.ExtraActCode == 2:
                     ShowHiddenHand();
@@ -214,6 +195,19 @@ namespace Script.Characters
             
             OnActionBegin();
 
+        }
+
+        protected override void ReadyTo(CommandStatus commandStatus)
+        {
+            if (commandStatus == CommandStatus.BasicAttack && HiddenHand)
+            {
+                CommandState = CommandStatus.BasicAttack;
+                UI.SetInteractable(ButtonID.BasicAttack, false);
+                UI.SetInteractable(ButtonID.SkillAttack, false);
+                GM.SetCursorForm(EnhancedBasicAttackData.TargetForm, EnhancedBasicAttackData.TargetSide);
+                return;
+            }
+            base.ReadyTo(commandStatus);
         }
 
         protected override void RegisterEvent()
