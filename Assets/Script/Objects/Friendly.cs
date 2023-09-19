@@ -1,10 +1,7 @@
-using System;
-using Script.Data.ActionData;
 using Script.Data;
 using Script.Enums;
 using Script.InteractLogic;
-using Script.Tools;
-using Tools;
+
 using UnityEngine;
 using Action = Script.ActionLogic.Action;
 
@@ -30,25 +27,32 @@ namespace Script.Objects
         
         protected virtual void BasicAttack()
         {
-            SetTarget(GM.CurrentTarget);
-            ActionDetail ad = new ActionDetail(this, _target, BasicAttackData);
-            GM.GetMessageFromActor(Message.ActionPrepared);
-            IM.Process(ad);
-            DoAction(SkillType.Attack, TargetForm.Single);
+            Act(BasicAttackData);
         }
         
-        // 默认实现占位符，请勿使用，没做 ActionDetail
         protected virtual void SkillAttack()
         {
-            SetTarget(GM.CurrentTarget);
-            GM.GetMessageFromActor(Message.ActionPrepared);
-            DoAction(SkillType.Attack, TargetForm.Blast);
+            Act(SkillAttackData);
         }
         protected virtual void Ultimate()
         {
-            SetTarget(GM.CurrentTarget);
+            Act(UltimateData);
+        }
+
+        protected virtual void Act(ActionDataBase data)
+        {
+            if (data.TargetForm == TargetForm.Aoe)
+            {
+                SetTarget(null, true, data.TargetSide == TargetSide.Friendly);
+            }
+            else
+            {
+                SetTarget(GM.CurrentTarget);
+            }
+            ActionDetail ad = new ActionDetail(this, _target, data);
             GM.GetMessageFromActor(Message.ActionPrepared);
-            DoAction(SkillType.Attack, TargetForm.Aoe);
+            IM.Process(ad);
+            DoAnimation(data.SkillType, data.TargetForm);
         }
 
         public void AskUltimate()

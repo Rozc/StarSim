@@ -155,11 +155,8 @@ public class GameManager : SingletonBase<GameManager>
 
     private void InteractDone()
     {
-        _targetSelector.Available = false;
-        foreach (var o in PosDict.Values)
-        {
-            _targetSelector.Disable();
-        }
+
+        _targetSelector.Disable();
         UI.UpdateActorName();
         UI.UpdateActQLabel();
         UI.UpdateTurnQLabel();
@@ -301,7 +298,6 @@ public class GameManager : SingletonBase<GameManager>
             _currentActionOf.GetMessageFromGM(Message.Interrupt);
             NextAction();
         }
-        UI.UpdateActQLabel();
         return _currentUAID - 1;
     }
     public string GetActQ()

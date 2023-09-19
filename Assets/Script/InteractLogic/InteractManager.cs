@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Script.BuffLogic;
 using Script.Enums;
@@ -12,10 +14,15 @@ namespace Script.InteractLogic
     /// 伤害交互管理器
     /// 职责：接收行动细节并转发给目标
     /// 主要功能在于将扩散伤害/Aoe伤害 *拆* 成对每个目标的伤害然后发送给受击目标
-    /// 也就是这边需要拿到所有对象脚本的引用
     /// </summary>
     public class InteractManager : SingletonBase<InteractManager>
     {
+        private GameManager GM = GameManager.Instance;
+        
+        // TODO 进入行动交互时需要保存角色属性快照，以保证 Buff 是基于原始属性计算的
+        // 但是伤害是基于上了 Buff 之后的属性确定的
+        // 考虑，新增加的 Buff 在 Buff 流程处理完之前进入一个缓存队列，这个队列暂时不参与数值的计算
+        // 在 Buff 流程结束，伤害流程开启前，通知所有受影响目标将缓存队列中的 Buff 加入到 Buff 队列中
         public void Process(ActionDetail ad)
         {
             // TODO
@@ -24,14 +31,16 @@ namespace Script.InteractLogic
             switch (ad.Data.TargetForm)
             {
                 case TargetForm.Single:
-                    Single(ad);
+                    SingleBuff(ad);
+                    SingleDamage(ad);
+                    break;
+                case TargetForm.Aoe:
+                    Aoe(ad);
                     break;
             }
         }
-        
-        // 干脆把整个 ad 发给目标让人自己算得了
-        // 可能还是的在这里计算
-        private void Single(ActionDetail ad)
+
+        private void SingleBuff(ActionDetail ad, bool isDelegate = false)
         {
 
             switch (ad.Data.RemoveA)
@@ -46,9 +55,9 @@ namespace Script.InteractLogic
                         break;
                 }
 
-            foreach (var buffID in ad.Data.RemoveTheSpecifiedBuff)
+            foreach (var buffData in ad.Data.RemoveTheSpecifiedBuff)
             {
-                ad.Target.RemoveTheBuff(buffID);
+                ad.Target.RemoveTheBuff(buffData);
             }
             
             if (ad.Data.BuffDataList.Length > 0)
@@ -58,7 +67,7 @@ namespace Script.InteractLogic
                 {
                     var buffData = ad.Data.BuffDataList[i];
                     // 命中概率计算
-                    float probability = buffData.Probability;
+                    var probability = buffData.Probability;
                     if (!buffData.FixedProbability)
                     {
                         // TODO 根据效果命中和效果抵抗，利用公式计算最终概率
@@ -115,11 +124,21 @@ namespace Script.InteractLogic
                 ad.Target.ReceiveBuff(buffs);
             }
 
+            if (!isDelegate) ad.Target.ApplyBuff();
+        }
+
+        private void SingleDamage(ActionDetail ad)
+        {
             switch (ad.Data.SkillType)
             {
-                // TODO
+                // TODO 处理伤害数值计算
+                case SkillType.Attack:
+                    ad.Target.ReceiveDamage(1, ad.Actor, !ad.Data.NotAnDiscreteAction);
+                    break;
+                case SkillType.Restore:
+                    ad.Target.ReceiveHealing(1, ad.Actor, !ad.Data.NotAnDiscreteAction);
+                    break;
             }
-
         }
 
         private bool ToValue(
@@ -162,9 +181,23 @@ namespace Script.InteractLogic
         {
             
         }
+        
+        /// <summary>
+        /// 把 AoE 攻击转换为对各个对象的 Single 攻击，并传递数值和 Buff
+        /// </summary>
+        /// <param name="ad"></param>
         private void Aoe(ActionDetail ad)
         {
-            
+            List<ActionDetail> ads = (
+                from obj in (ad.Data.TargetSide == TargetSide.Enemy 
+                    ? GM.EnemyObjects.Cast<BaseObject>()
+                    : GM.FriendlyObjects.Cast<BaseObject>())
+                select new ActionDetail(ad.Actor, obj, ad.Data)).ToList();
+
+            foreach (var aad in ads) SingleBuff(aad, true);
+            foreach (var add in ads) add.Target.ApplyBuff();
+            foreach (var add in ads) SingleDamage(add);
+
         }
     }
 }

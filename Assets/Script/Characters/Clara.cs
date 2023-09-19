@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Script.ActionLogic;
-using Script.BuffLogic;
 using Script.Data;
 using Script.Enums;
 using Script.InteractLogic;
 using Script.Objects;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Script.Characters
 {
@@ -32,22 +30,20 @@ namespace Script.Characters
                 Debug.LogError( "Clara Get Action Error: Not My Action! Actor ID: " + action.Actor.Position + " My ID: " + Position);
                 return;
             }
-            
-            if (action.ActionType == ActionType.Followup)
+            _currentAction = action;
+            switch (action.ActionType)
             {
-                _currentAction = action;
-                Counter();
-            }
-            else if (action.ActionType == ActionType.Extra && action.ExtraActCode == 0)
-            {
-                // Ultimate
-                _currentAction = action;
-                ReadyTo(CommandStatus.Release);
-                GM.TargetLock(this);
-            }
-            else
-            {
-                base.GetAction(action);
+                case ActionType.Followup:
+                    Counter();
+                    break;
+                case ActionType.Extra when action.ExtraActCode == 0:
+                    // Ultimate
+                    ReadyTo(CommandStatus.Release);
+                    GM.TargetLock(this);
+                    break;
+                default:
+                    base.GetAction(action);
+                    break;
             }
         }
         protected override void OnSpawn()
@@ -55,21 +51,21 @@ namespace Script.Characters
             base.OnSpawn();
             ActionDetail ad = new ActionDetail(this, this, OnSpawnBuffActionData);
         }
-
-        protected override void BasicAttack()
+        
+        /*protected override void BasicAttack()
         {   
             SetTarget(GM.CurrentTarget);
             ActionDetail ad = new ActionDetail(this, _target, BasicAttackData);
             GM.GetMessageFromActor(Message.ActionPrepared);
             IM.Process(ad);
             DoAction(SkillType.Attack, TargetForm.Single);
-        }
+        }*/
 
         protected override void SkillAttack()
         {
             // TODO
             // 对于具有反击标记的敌人，额外造成一次伤害，并清除其反击标记
-            List<ActionDetail> ads = (from enemy in GM.EnemyObjects where enemy.HasBuff(1000103, out var _)
+            var ads = (from enemy in GM.EnemyObjects where enemy.HasBuff(1000103, out _)
                 select new ActionDetail(this, enemy, skillOnFlagData)).ToList();
 
             // AoE
@@ -81,27 +77,23 @@ namespace Script.Characters
             {
                 IM.Process(aad);
             }
-            DoAction(SkillType.Attack, TargetForm.Aoe);
+            DoAnimation(SkillType.Attack, TargetForm.Aoe);
         }
 
 
         protected override void Ultimate()
         {
-            // 给自己上 Buff
-            // 对自己的 Enhance 行动
-            SetTarget(this);
-            ActionDetail ad = new ActionDetail(this, this, UltimateData);
-
-            GM.GetMessageFromActor(Message.ActionPrepared);
             enhancedCounterCount = 2;
-            IM.Process(ad);
-            DoAction(SkillType.Enhance, TargetForm.Single);
-            
+            Act(UltimateData);
         }
 
         private void Counter()
         {
-            // TODO 确认目标，根据 ID 跟 GM 拿
+            if (counterTarget is null)
+            {
+                Debug.LogError("Clara: counterTarget is null!");
+                return;
+            }
             SetTarget(counterTarget);
             counterTarget = null; // 重置反击目标
             // 给敌人上反击标记
@@ -121,7 +113,7 @@ namespace Script.Characters
                     }
                 }
                 
-                DoAction(SkillType.Attack, TargetForm.Blast);
+                DoAnimation(SkillType.Attack, TargetForm.Blast);
             }
             else
             {
@@ -129,7 +121,7 @@ namespace Script.Characters
                 ActionDetail ad = new ActionDetail(this, _target, counterData);
                 GM.GetMessageFromActor(Message.ActionPrepared);
                 IM.Process(ad);
-                DoAction(SkillType.Attack, TargetForm.Single);
+                DoAnimation(SkillType.Attack, TargetForm.Single);
             }
         }
         
@@ -146,19 +138,14 @@ namespace Script.Characters
             // 关于记录反击标记的问题，如果敌方位置发生变化，那怎么办呢
             // 应该记录反击目标的 BaseObject 引用，而不是 Position
             if (counterTarget != null) return;
-            if (sender is Friendly)
-            {
-                if (sender == this || enhancedCounterCount > 0)
-                {
-                    Action action = new(this, 
-                        ActionType.Followup, 
-                        ActionPriority.Clara_Counter_Self, 
-                        enhancedCounterCount > 0 ? 2 : 1);
-                    counterTarget = other;
-                    GM.RequireExtraAction(action);
-                }
-                
-            }
+            if (sender is not Friendly) return;
+            if (sender != this && enhancedCounterCount <= 0) return;
+            Action action = new(this, 
+                ActionType.Followup, 
+                ActionPriority.Clara_Counter_Self, 
+                enhancedCounterCount > 0 ? 2 : 1);
+            counterTarget = other;
+            GM.RequireExtraAction(action);
         }
     }
 }

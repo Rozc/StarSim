@@ -53,8 +53,8 @@ namespace Script.Objects
             GM.GetMessageFromActor(Message.ActionPrepared);
             InteractManager.Instance.Process(ad);
             // 默认实现占位符
-            GM.GetMessageFromActor(Message.InteractDone);
-            DoAction(SkillType.Attack, TargetForm.Single);
+
+            DoAnimation(SkillType.Attack, TargetForm.Single);
         }
     }
 }

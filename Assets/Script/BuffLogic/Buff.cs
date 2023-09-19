@@ -25,66 +25,18 @@ namespace Script.BuffLogic
             DurationLeft = data.Duration;
             PropertyDict = new Dictionary<string, float>();
         }
-        
-        /*public static Dictionary<string, float>[] ExtractBuffDict(ActionDetail ad)
+
+        public static bool operator ==(Buff a, Buff b)
         {
-            var bds = ad.Data.BuffDataList;
-            var dicts = new Dictionary<string, float>[bds.Length];
+            if (a is null && b is null) return true;
+            if (a is null || b is null) return false;
+            return a.Data.BuffID == b.Data.BuffID;
+        }
 
-            for (var i = 0; i < bds.Length; i++)
-            {
-                var buffData = bds[i];
-                var buffStrs = buffData.BuffProperties;
-
-                foreach (string s in buffStrs)
-                {
-                    string[] ss = s.Split(':');
-                    var propName = ss[0].Trim();
-                    var value = 0f;
-                    var valueStr = ss[1].Split("%", '<');
-                    if (valueStr.Length > 1)
-                    {
-                        // 当具有表达式属性时，其中数字一定代表百分比
-                        // propName: value = (propName < (propName@value
-                        // CritDamage: 13.2 (CritDamage
-                        // Attack%: 25 < (Attack@50
-                        // Attack: 40 = )Shield < )AttackFixed@60
-                        // $ => %, @ => :
-                        // ( => 施加方属性
-                        // ) => 目标属性
-                        // < expression => 最大不超过 expression
-                    }
-                    else
-                    {
-                        value = float.Parse(valueStr[0]);
-                    }
-
-                    if (dicts[i].ContainsKey(propName))
-                    {
-                        dicts[i][propName] += value;
-                    }
-                    else
-                    {
-                        dicts[i][propName] = value;
-                    }
-                }
-            }
-
-
-            return dicts;
-        }*/
-        /*public static BuffProperty TranslateBuffString(string str)
+        public static bool operator !=(Buff a, Buff b)
         {
-            if (Enum.TryParse(str, out BuffProperty property))
-            {
-                return property;
-            }
-            else
-            {
-                Debug.LogError("Unknown BuffProperty String Error: " + str);
-                return BuffProperty.None;
-            }
-        }*/
+            return !(a == b);
+        }
     }
 }
 

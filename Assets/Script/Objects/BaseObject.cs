@@ -7,6 +7,7 @@ using Script.Enums;
 using Script.Event;
 using Script.InteractLogic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Action = Script.ActionLogic.Action;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
@@ -21,6 +22,7 @@ namespace Script.Objects
         
         // Realtime Data
         [field: SerializeField] public RealtimeData Data { get; private set; }
+        [FormerlySerializedAs("CachedBuffList")] [field: SerializeField] public List<Buff> _cachedBuffList;
         [field: SerializeField] public bool isAlive = true;
         
 
@@ -178,7 +180,7 @@ namespace Script.Objects
         
         // ====================================== Action ======================================
         public abstract void GetAction(Action action);
-        protected virtual void DoAction(SkillType skillType, TargetForm targetForm)
+        protected virtual void DoAnimation(SkillType skillType, TargetForm targetForm)
         {
             Debug.Log("        DoAction() of " 
                       + BaseData.Name + " | " 
@@ -243,17 +245,33 @@ namespace Script.Objects
                 RemoveBuff(buffToRemove);
             }
         }
-        public virtual void RemoveTheBuff(int buffID)
+        public virtual void RemoveTheBuff(Buff buff)
         {
-            if (HasBuff(buffID, out var buff))
+            if (HasBuff(buff, out var buffToRemove))
             {
-                RemoveBuff(buff);
+                RemoveBuff(buffToRemove);
             }
         }
-        public virtual void ReceiveBuff(Buff[] buffs)
+
+        public virtual void RemoveTheBuff(BuffData buffData)
         {
-            
+            if (HasBuff(buffData, out var buffToRemove))
+            {
+                RemoveBuff(buffToRemove);
+            }
+        }
+
+        public virtual void ReceiveBuff(IEnumerable<Buff> buffs)
+        {
             foreach (var buff in buffs)
+            {
+                _cachedBuffList.Add(buff);
+            }
+        }
+
+        public virtual void ApplyBuff()
+        {
+            foreach (var buff in _cachedBuffList)
             {
                 // Done: 检查身上是否已有该 Buff，如果有，检查是否可叠加，如果可叠加则叠加，否则仅更新持续时间
                 // 有些 Buff 叠层之后效果也会叠加，考虑去掉原来的 Buff 然后加一个新的？
@@ -268,7 +286,7 @@ namespace Script.Objects
                     buff.PropertyDict.Remove("Distance");
                 }
                 
-                if (HasBuff(buff.Data.BuffID, out Buff buffed))
+                if (HasBuff(buff, out Buff buffed))
                 {
                     // TODO 这里可能还有得优化，不过先这样做了，也能在 UI 体现被更新的 Buff 会移到最前面
                     Data.BuffList.Remove(buffed);
@@ -283,24 +301,49 @@ namespace Script.Objects
                 {
                     Data.BuffList.Add(buff);
                 }
-                if (buff.PropertyDict.ContainsKey("Speed")) EC.TriggerEvent(EventID.ActionValueUpdate, this, buff.Caster);
+                if (buff.PropertyDict.ContainsKey("Speed")) 
+                    EC.TriggerEvent(EventID.ActionValueUpdate, this, buff.Caster);
             }
+            _cachedBuffList.Clear();
             
         }
         protected void RemoveBuff(Buff buff)
         {
             Data.BuffList.Remove(buff);
-            if (buff.PropertyDict.ContainsKey("Speed")) EC.TriggerEvent(EventID.ActionValueUpdate, this, buff.Caster);
+            if (buff.PropertyDict.ContainsKey("Speed")) 
+                EC.TriggerEvent(EventID.ActionValueUpdate, this, buff.Caster);
         }
-        public bool HasBuff(int buffID, out Buff buff)
+        public bool HasBuff(Buff buffIn, out Buff buffOut)
         {
-            foreach (var t in Data.BuffList.Where(t => t.Data.BuffID == buffID))
+            foreach (var t in Data.BuffList.Where(t => t == buffIn))
             {
-                buff = t;
+                buffOut = t;
                 return true;
             }
 
-            buff = null;
+            buffOut = null;
+            return false;
+        }
+        public bool HasBuff(BuffData data, out Buff buffOut)
+        {
+            foreach (var t in Data.BuffList.Where(t => t.Data.BuffID == data.BuffID))
+            {
+                buffOut = t;
+                return true;
+            }
+
+            buffOut = null;
+            return false;
+        }
+        public bool HasBuff(int buffID, out Buff buffOut)
+        {
+            foreach (var t in Data.BuffList.Where(t => t.Data.BuffID == buffID))
+            {
+                buffOut = t;
+                return true;
+            }
+
+            buffOut = null;
             return false;
         }
         public void TriggerBuff(int buffID) {}
@@ -396,8 +439,17 @@ namespace Script.Objects
             }
 
         }
-        
-        
+
+        public static bool operator ==(BaseObject a, BaseObject b)
+        {
+            if (a is null && b is null) return true;
+            if (a is null || b is null) return false;
+            return a.Data.CharacterID == b.Data.CharacterID;
+        }
+        public static bool operator !=(BaseObject a, BaseObject b)
+        {
+            return !(a == b);
+        }
         
         
 

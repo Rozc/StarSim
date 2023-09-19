@@ -85,7 +85,7 @@ namespace Script.Characters
                     extraActCode:3);
                 GM.RequireExtraAction(action);
             }
-            DoAction(SkillType.Attack, HiddenHand ? TargetForm.Blast : TargetForm.Single);
+            DoAnimation(SkillType.Attack, HiddenHand ? TargetForm.Blast : TargetForm.Single);
             if (!autarky) HiddenHand = false;
         }
 
@@ -105,7 +105,7 @@ namespace Script.Characters
             }
             GM.GetMessageFromActor(Message.ActionPrepared);
             IM.Process(ad);
-            DoAction(SkillType.Attack, HiddenHand ? TargetForm.Blast : TargetForm.Single);
+            DoAnimation(SkillType.Attack, HiddenHand ? TargetForm.Blast : TargetForm.Single);
             HiddenHand = false;
         }
         protected override void SkillAttack()
@@ -124,23 +124,20 @@ namespace Script.Characters
                 ActionPriority.Qingque_ExtraAction,
                 1);
             
+            // 需要在 ActionPrepared 后插入 ExtraAction，因此不能调用默认 Act 方法
             SetTarget(this);
             ActionDetail ad = new ActionDetail(this, this, SkillAttackData);
             GM.GetMessageFromActor(Message.ActionPrepared);
             IM.Process(ad);
             GM.RequireExtraAction(action);
-            DoAction(SkillType.Enhance, TargetForm.Single);
+            DoAnimation(SkillType.Enhance, TargetForm.Single);
 
         }
         protected override void Ultimate()
         {
             RemoveAllJades();
             Jades[0] = 4;
-            SetTarget(null, true);
-            ActionDetail ad = new ActionDetail(this, this, UltimateData);
-            GM.GetMessageFromActor(Message.ActionPrepared);
-            IM.Process(ad);
-            DoAction(SkillType.Attack, TargetForm.Aoe);
+            Act(UltimateData);
         }
 
         private void ShowHiddenHand()
@@ -150,7 +147,7 @@ namespace Script.Characters
             SetTarget(this);
             GM.GetMessageFromActor(Message.ActionPrepared);
             IM.Process(ad);
-            DoAction(SkillType.Enhance, TargetForm.Single);
+            DoAnimation(SkillType.Enhance, TargetForm.Single);
         }
 
         public override void GetInputFromManager(KeyCode input)

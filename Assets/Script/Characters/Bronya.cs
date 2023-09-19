@@ -12,12 +12,8 @@ namespace Script.Characters
     {
         [field: SerializeField] private ActionDataBase SkillCallBackAction;
         
-        protected override void BasicAttack()
-        {
-            base.BasicAttack();
-        }
 
-        protected override void SkillAttack()
+        /*protected override void SkillAttack()
         {
             // 先上 Buff
             // 然后解除负面效果
@@ -26,17 +22,17 @@ namespace Script.Characters
             ActionDetail ad = new ActionDetail(this, _target, SkillAttackData);
             GM.GetMessageFromActor(Message.ActionPrepared);
             IM.Process(ad);
-            // 拉条
-            DoAction(SkillType.Enhance, TargetForm.Single);
-        }
+            DoAction(SkillType.Support, TargetForm.Single);
+        }*/
 
-        protected override void Ultimate()
+        /*protected override void Ultimate()
         {
-            // TODO 在 Buff String 里实现一定程度的表达式计算
             SetTarget(null, true, true);
             ActionDetail ad = new ActionDetail(this, _target, UltimateData);
-            base.Ultimate();
-        }
+            GM.GetMessageFromActor(Message.ActionPrepared);
+            IM.Process(ad);
+            DoAction(SkillType.Support, TargetForm.Aoe);
+        }*/
 
         
         private BaseObject _lastSkillTarget = null;
@@ -48,7 +44,13 @@ namespace Script.Characters
 
         private void SkillTargetActionEnd(BaseObject sender, BaseObject _)
         {
+            if (_lastSkillTarget is null)
+            {
+                Debug.LogError("Bronya: _lastSkillTarget is null!");
+                return;
+            } 
             if (sender != _lastSkillTarget) return;
+            _lastSkillTarget = null;
             EC.UnsubscribeEvent(EventID.ActionEnd, SkillTargetActionEnd);
             ActionDetail ad = new ActionDetail(this, sender, SkillCallBackAction);
             IM.Process(ad);

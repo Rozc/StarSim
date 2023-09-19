@@ -13,7 +13,7 @@ namespace Script.Data
         [field: SerializeField] public TargetSide TargetSide { get; private set; }
         [field: SerializeField] public BuffData[] BuffDataList { get; private set; }
         [field: SerializeField] public BuffType RemoveA { get; private set; }
-        [field: SerializeField] public int[] RemoveTheSpecifiedBuff { get; private set; }
+        [field: SerializeField] public BuffData[] RemoveTheSpecifiedBuff { get; private set; }
         
         /// <summary>
         /// 是否是一次独立的攻击/治疗等等，只有独立的行动才会触发事件
