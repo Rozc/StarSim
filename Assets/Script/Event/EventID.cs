@@ -18,5 +18,6 @@ namespace Script.Enums
         MainActionEnd,
         ActionEnd,
         TurnEnd,
+        FriendlyAttack
     }
 }

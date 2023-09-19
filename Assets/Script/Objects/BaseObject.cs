@@ -66,6 +66,7 @@ namespace Script.Objects
                     GM.GetMessageFromActor(Message.InteractDone, Data.CharacterID);
                     _afterInteractDone?.Invoke();
                     _afterInteractDone = null;
+                    
                 }
                 else if (MovingState == MovingStatus.MoveReturning)
                 {
@@ -315,6 +316,13 @@ namespace Script.Objects
         protected void RemoveBuff(Buff buff)
         {
             Data.BuffList.Remove(buff);
+            string f = buff.Data.OnRemove.Trim();
+            if (f != "")
+            {
+                var mt = buff.Caster.GetType().GetMethod(f);
+                if (mt != null) mt.Invoke(buff.Caster, new object[] { this });
+                else Debug.LogError("No Such OnRemove Method: " + f + " in " + buff.Caster.Data.Name);
+            }
             if (buff.PropertyDict.ContainsKey("Speed")) 
                 EC.TriggerEvent(EventID.ActionValueUpdate, this, buff.Caster);
         }

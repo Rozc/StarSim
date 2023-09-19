@@ -40,7 +40,8 @@ namespace Script.Objects
         }
 
         
-        protected virtual void Act(ActionDataBase data, 
+        protected virtual void Act(ActionDataBase data,
+            BaseObject target = null,
             ExtraLogic afterTargetSet = null, 
             ExtraLogic afterActionPrepared = null,
             ExtraLogic afterIMProcessed = null,
@@ -50,6 +51,10 @@ namespace Script.Objects
             if (data.TargetForm == TargetForm.Aoe)
             {
                 SetTarget(null, true, data.TargetSide == TargetSide.Friendly);
+            }
+            else if (target is not null)
+            {
+                SetTarget(target);
             }
             else
             {

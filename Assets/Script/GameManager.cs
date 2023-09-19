@@ -152,6 +152,15 @@ public class GameManager : SingletonBase<GameManager>
         _currentActionOf.GetAction(action);
     }
 
+    private void ActionCancel()
+    {
+        Debug.Log("    Action of " + _currentActionOf.Data.Name + "Canceled");
+        _state = GMStatus.WaitingActDone;
+        _actionQ.Pop();
+        _targetSelector.Disable();
+        ActionDone();
+    }
+
     private void InteractDone()
     {
         UI.UpdateActorName();
@@ -268,6 +277,9 @@ public class GameManager : SingletonBase<GameManager>
                 _state = GMStatus.WaitingActDone;
                 _currentAction = _actionQ.Pop();
                 _targetSelector.Disable();
+                break;
+            case Message.ActionCanceled:
+                ActionCancel();
                 break;
             case Message.InteractDone:
                 InteractDone();

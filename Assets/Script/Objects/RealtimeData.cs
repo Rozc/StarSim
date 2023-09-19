@@ -24,6 +24,13 @@ namespace Script.Objects
         private Dictionary<string, float> LightConeData;
         private Dictionary<string, float> RelicsData;
         [field: SerializeField] public List<Buff> BuffList;
+        private float _healthDiff;
+
+        public float CurrentHealth
+        {
+            get => Get("Health") + _healthDiff;
+            set => _healthDiff = value - Get("Health");
+        } 
 
         public RealtimeData(ObjectData data)
         {

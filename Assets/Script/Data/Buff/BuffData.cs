@@ -33,6 +33,7 @@ namespace Script.Data
         
         [field: SerializeField] public bool HasCallBack { get; protected set; }
         [field: SerializeField] public string[] CallBackList { get; protected set; }
+        [field: SerializeField] public string OnRemove { get; protected set; }
         [field: SerializeField] public bool HasProperty { get; protected set; }
         [field: SerializeField] public BuffProperty[] BuffPropertyList { get; protected set; }
     }

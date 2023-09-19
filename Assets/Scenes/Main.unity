@@ -768,6 +768,12 @@ MonoBehaviour:
   <SkillAttackData>k__BackingField: {fileID: 11400000, guid: ce3cd46cd69ee7c4ea658e1b32e65080, type: 2}
   <UltimateData>k__BackingField: {fileID: 11400000, guid: 187911d71ae97334e8b8be311834746d, type: 2}
   CommandState: 0
+  FieldDeployData: {fileID: 11400000, guid: 54d59d1db9a2fca4684b0dd4cf29abc3, type: 2}
+  FieldDeployOtherData: {fileID: 11400000, guid: bd58673b18b1b7b409c9fdc5726631f2, type: 2}
+  AutoSkillData: {fileID: 11400000, guid: 6dece924435a4e946b2f13f9a114c347, type: 2}
+  AutoSkillCDData: {fileID: 11400000, guid: a87c38eb55cd03f459046d1cf1f9004c, type: 2}
+  FieldHealMainData: {fileID: 11400000, guid: b0abf1d1628034d4581a0f3b7171f2d9, type: 2}
+  FieldHealOtherData: {fileID: 11400000, guid: 69f55fd047a23784eaea69092ffa76e4, type: 2}
   _currentStackOfAbyssFlower: 0
   _isFieldActive: 0
   _isAutoSkillInCD: 0

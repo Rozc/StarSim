@@ -1,4 +1,6 @@
+using System.Linq;
 using Script.ActionLogic;
+using Script.Data;
 using Script.Enums;
 using Script.InteractLogic;
 using Script.Objects;
@@ -17,6 +19,13 @@ namespace Script.Characters
         // ExtraActCode
         // 1: Field
         // 2: Auto Skill
+
+        [field: SerializeField] private ActionDataBase FieldDeployData;
+        [field: SerializeField] private ActionDataBase FieldDeployOtherData;
+        [field: SerializeField] private ActionDataBase AutoSkillData;
+        [field: SerializeField] private ActionDataBase AutoSkillCDData;
+        [field: SerializeField] private ActionDataBase FieldHealMainData;
+        [field: SerializeField] private ActionDataBase FieldHealOtherData;
         
         [field: SerializeField] private int _currentStackOfAbyssFlower = 0;
         [field: SerializeField] private bool _isFieldActive = false;
@@ -51,6 +60,7 @@ namespace Script.Characters
                     ActionType.Followup,
                     ActionPriority.Luocha_Field,
                     1);
+                GM.RequireExtraAction(action);
             }
         }
 
@@ -60,13 +70,92 @@ namespace Script.Characters
             // 给自己上一个持续两回合的 Buff
             // 给自己以外的队友上一个不随回合减少的 Buff
             // 当自己的 Buff 结束时，移除队友身上的这个 Buff
+            Act(FieldDeployData, this, afterIMProcessed: DeployFieldAttachment);
         }
 
-        private void AutoSkill()
+        private void DeployFieldAttachment()
+        {
+            foreach (var friendly in GM.FriendlyObjects.Where(o => o.Position is >= 1 and <= 4))
+            {
+                if (friendly == this) continue;
+                ActionDetail ad = new ActionDetail(this, friendly, FieldDeployOtherData);
+                IM.Process(ad);
+            }
+        }
+
+        private void TryAutoSkill()
+        {
+            float lowestHPRatio = 1;
+            Friendly target = null;
+            foreach (var friendly in GM.FriendlyObjects.Where(o => o.Position is >= 1 and <= 4))
+            {
+                float ratio = friendly.Data.CurrentHealth / friendly.Data.Get("Health");
+                if (ratio <= 0.5 && ratio < lowestHPRatio)
+                {
+                    lowestHPRatio = ratio;
+                    target = friendly;
+                }
+            }
+
+            if (target is not null)
+            {
+                AutoSkill(target);
+            }
+            else
+            {
+                // TODO 把行动取消可以包装一下
+                _currentAction = null;
+                _target = null;
+                GM.GetMessageFromActor(Message.ActionCanceled);
+            }
+        }
+        private void AutoSkill(BaseObject target)
         {
             _isAutoSkillInCD = true;
             // 给自己上一个持续两回合的 Buff，进入 CD
             // 当 Buff 结束时，修改 CD 标记
+            // 找到生命值百分比最低的角色
+            
+            Act(AutoSkillData, target, afterIMProcessed: AutoSkillAttachment);
+        }
+        private void AutoSkillAttachment()
+        {
+            ActionDetail ad = new ActionDetail(this, this, AutoSkillCDData);
+            IM.Process(ad);
+        }
+
+        public void OnFieldRemove(BaseObject _)
+        {
+            _isFieldActive = false;
+            foreach (var friendly in GM.FriendlyObjects.Where(o => o.Position is >= 1 and <= 4))
+            {
+                if (friendly.HasBuff(1000301, out var buff))
+                {
+                    friendly.RemoveTheBuff(buff);
+                }
+            }
+        }
+
+        public void OnAutoSkillReady()
+        {
+            _isAutoSkillInCD = false;
+            TryAutoSkill();
+        }
+
+        public void CallBackField(BaseObject _)
+        {
+            EC.SubscribeEvent(EventID.FriendlyAttack, EventFriendlyAttack);
+        }
+
+        private void EventFriendlyAttack(BaseObject sender, BaseObject other)
+        {
+            if (!_isFieldActive) return;
+            IM.Process(new ActionDetail(this, sender, FieldHealMainData));
+            foreach (var friendly in GM.FriendlyObjects.Where(o => o.Position is >= 1 and <= 4))
+            {
+                if (friendly == sender) continue;
+                IM.Process(new ActionDetail(this, friendly, FieldHealOtherData));
+            }
         }
 
         public override void GetAction(Action action)
@@ -83,7 +172,7 @@ namespace Script.Characters
                     DeployField();
                     break;
                 case 2:
-                    AutoSkill();
+                    TryAutoSkill();
                     break;
                 default:
                     base.GetAction(action);
