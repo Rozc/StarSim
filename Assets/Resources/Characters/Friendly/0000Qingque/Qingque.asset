@@ -9,17 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50806cf6efd6d6644be9e115fc9d60ea, type: 3}
+  m_Script: {fileID: 11500000, guid: 36bf8514dca641ec8a6fac4ffa904783, type: 3}
   m_Name: Qingque
   m_EditorClassIdentifier: 
   <CharacterID>k__BackingField: 10000
   <Name>k__BackingField: Qingque
   <Level>k__BackingField: 80
   <BattleType>k__BackingField: 5
-  <Path>k__BackingField: 4
   <PropertyStrings>k__BackingField:
   - 'Health: 1032'
   - 'Attack: 652'
   - 'Defence: 441'
   - 'Speed: 98'
   - 'MaxEnergy: 140'
+  <Path>k__BackingField: 4

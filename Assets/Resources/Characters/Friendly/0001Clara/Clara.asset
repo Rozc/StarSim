@@ -9,17 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50806cf6efd6d6644be9e115fc9d60ea, type: 3}
+  m_Script: {fileID: 11500000, guid: 36bf8514dca641ec8a6fac4ffa904783, type: 3}
   m_Name: Clara
   m_EditorClassIdentifier: 
   <CharacterID>k__BackingField: 10001
   <Name>k__BackingField: Clara
   <Level>k__BackingField: 80
   <BattleType>k__BackingField: 0
-  <Path>k__BackingField: 2
   <PropertyStrings>k__BackingField:
   - 'Health: 1241'
   - 'Attack: 737'
   - 'Defence: 485'
   - 'Speed: 90'
   - 'MaxEnergy: 110'
+  <Path>k__BackingField: 2

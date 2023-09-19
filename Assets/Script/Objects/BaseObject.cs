@@ -457,7 +457,8 @@ namespace Script.Objects
         {
             if (a is null && b is null) return true;
             if (a is null || b is null) return false;
-            return a.Data.CharacterID == b.Data.CharacterID;
+            return (a.Data.CharacterID == b.Data.CharacterID)
+                   && (a.Position == b.Position);
         }
         public static bool operator !=(BaseObject a, BaseObject b)
         {

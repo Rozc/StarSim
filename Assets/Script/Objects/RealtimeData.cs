@@ -94,7 +94,7 @@ namespace Script.Objects
                 }
             }
             
-            BaseData = PropertyFile.Read(data.PropertyStrings, Path == PathType.None ? 1 : 0);
+            BaseData = PropertyFile.Read(data.PropertyStrings, data is FriendlyData ? 0 : 1);
             TraceData = new Dictionary<string, float>();
             LightConeData = new Dictionary<string, float>();
             RelicsData = new Dictionary<string, float>();

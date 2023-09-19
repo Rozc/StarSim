@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Script.Data
 {
-    [CreateAssetMenu(fileName = "newObjectData", menuName = "Data/Object Data/Object Data")]
+    
     public class ObjectData : ScriptableObject
     {
         [field: SerializeField] public int CharacterID { get; private set; }
