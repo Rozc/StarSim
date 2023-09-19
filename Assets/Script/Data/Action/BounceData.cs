@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Script.Data.ActionData.AttackData
+namespace Script.Data
 {
     [CreateAssetMenu(fileName = "newBounceData", menuName = "Data/Action Data/Bounce Data")]
     public class BounceData : ActionDataBase

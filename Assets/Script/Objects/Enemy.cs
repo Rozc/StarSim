@@ -2,9 +2,6 @@ using Script.ActionLogic;
 using Script.Data;
 using Script.Enums;
 using Script.InteractLogic;
-using Script.Tools;
-using Tools;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Script.Objects

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Script.Enums;
 using Script.Objects;
 using Script.Tools;
-using Tools;
 
 namespace Script.Event
 {

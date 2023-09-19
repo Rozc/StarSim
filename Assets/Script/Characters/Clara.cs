@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Script.ActionLogic;
 using Script.Data;
 using Script.Enums;
@@ -50,6 +49,7 @@ namespace Script.Characters
         {
             base.OnSpawn();
             ActionDetail ad = new ActionDetail(this, this, OnSpawnBuffActionData);
+            IM.Process(ad);
         }
         
         /*protected override void BasicAttack()
@@ -63,7 +63,6 @@ namespace Script.Characters
 
         protected override void SkillAttack()
         {
-            // TODO
             // 对于具有反击标记的敌人，额外造成一次伤害，并清除其反击标记
             var ads = (from enemy in GM.EnemyObjects where enemy.HasBuff(1000103, out _)
                 select new ActionDetail(this, enemy, skillOnFlagData)).ToList();
@@ -132,7 +131,6 @@ namespace Script.Characters
 
         private void EventTryCounter(BaseObject sender, BaseObject other)
         {
-            // TODO 如果是受到了 Aoe 攻击，每个人都发了一个事件怎么办？
             // 如果实现机制保证克拉拉在生成反击行动后不会再生成反击行动，那就设定 TargetID 就行了，接收到事件时先检测 TargetID 是不是 -1
             // 同时也能解决在生成反击行动但尚未执行时，又被打了的情况
             // 关于记录反击标记的问题，如果敌方位置发生变化，那怎么办呢

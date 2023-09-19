@@ -71,7 +71,7 @@ namespace Script.Objects
         }
         
         
-        // TODO 考虑光锥上的数据怎么做, 体现为 不可见的 Buff ？
+        // TODO 考虑光锥上的数据怎么做, 体现为 不可见的 Buff ？以及如何处理光锥的各种效果
         public float GetFixed(string propName)
         {
             float result = 0;

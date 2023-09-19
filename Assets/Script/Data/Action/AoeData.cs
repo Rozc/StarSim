@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Script.Data.ActionData.AttackData
+namespace Script.Data
 {
     [CreateAssetMenu(fileName = "newAoeData", menuName = "Data/Action Data/Aoe Data")]
     public class AoeData : ActionDataBase

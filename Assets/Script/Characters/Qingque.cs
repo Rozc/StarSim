@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Script.Data;
-using Script.Data.ActionData.AttackData;
 using Script.Enums;
 using Script.InteractLogic;
 using Script.Objects;
@@ -37,7 +36,6 @@ namespace Script.Characters
         {
             base.OnActionBegin();
             // 实际游戏里可能没做 !HiddenHand 这一个检查，因为即使杠了再放终结技，放完也会有自摸的动画
-            // TODO 生成 ad，加buff
             if (_currentAction.ActionType is ActionType.Base 
                 || _currentAction.ExtraActCode == 1)
             {

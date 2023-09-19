@@ -19,9 +19,7 @@ namespace Script.InteractLogic
     {
         private GameManager GM = GameManager.Instance;
         
-        // TODO 进入行动交互时需要保存角色属性快照，以保证 Buff 是基于原始属性计算的
-        // 但是伤害是基于上了 Buff 之后的属性确定的
-        // 考虑，新增加的 Buff 在 Buff 流程处理完之前进入一个缓存队列，这个队列暂时不参与数值的计算
+        //新增加的 Buff 在 Buff 流程处理完之前进入一个缓存队列，这个队列暂时不参与数值的计算
         // 在 Buff 流程结束，伤害流程开启前，通知所有受影响目标将缓存队列中的 Buff 加入到 Buff 队列中
         public void Process(ActionDetail ad)
         {

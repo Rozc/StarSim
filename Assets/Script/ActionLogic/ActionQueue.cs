@@ -1,19 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using Script.ActionLogic;
 using Script.Enums;
-using Script.Tools;
 
-namespace Script.ActingLogic
+namespace Script.ActionLogic
 {
     // 本文件定义了用于当前回合的行动的行动序列类
     public class ActionQueue // 行动序列
     {
-        private LinkedList<Action> _list; // 双向链表，每个节点对应一个 Action
-        public ActionQueue(int capacity = 16)
-        {
-            _list = new LinkedList<Action>();
-        }
+        private LinkedList<Action> _list = new(); // 双向链表，每个节点对应一个 Action
         public int Count => _list.Count;
 
         /// <summary>

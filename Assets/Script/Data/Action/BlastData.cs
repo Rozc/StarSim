@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Script.Data.ActionData.AttackData
+namespace Script.Data
 {
     [CreateAssetMenu(fileName = "newBlastData", menuName = "Data/Action Data/Blast Data")]
     public class BlastData : ActionDataBase

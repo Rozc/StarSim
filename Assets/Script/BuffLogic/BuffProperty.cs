@@ -1,5 +1,3 @@
-using UnityEngine.Serialization;
-
 namespace Script.BuffLogic
 {
     [System.Serializable]

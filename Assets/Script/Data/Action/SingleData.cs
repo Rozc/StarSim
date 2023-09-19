@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Script.Data.ActionData.AttackData
+namespace Script.Data
 {
     [CreateAssetMenu(fileName = "newSingleData", menuName = "Data/Action Data/Single Data")]
     public class SingleData : ActionDataBase

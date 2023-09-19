@@ -1,58 +1,45 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using System.Linq;
 using Script.Objects;
-using UnityEditor.IMGUI.Controls;
-using UnityEditor.Experimental.GraphView;
 
-// TODO 将 Position 改成 CharaterID 实现
-namespace Tools
+namespace Script.ActionLogic
 {
-    // ���ļ��������ж�������
-    public class TurnQueue // �ж�����
+    public class TurnQueue
     {
-        private LinkedList<BaseObject> _list; // ˫������ÿ���ڵ��Ӧһ����Ϸ���󣬽ڵ�ֵΪ�ж�ֵ
-        private Dictionary<int, LinkedListNode<BaseObject>> _dict; // ��Ϸ����ID <=> �ڵ�
-        // private Dictionary<LinkedListNode<float>, int> _revDict; // �ڵ� <=> ��Ϸ����ID
+        private LinkedList<BaseObject> _list;
+        private Dictionary<int, LinkedListNode<BaseObject>> _dict;
 
 
         public TurnQueue(int capacity = 16)
         {
             _list = new LinkedList<BaseObject>();
             _dict = new Dictionary<int, LinkedListNode<BaseObject>>(capacity);
-            // _revDict = new Dictionary<LinkedListNode<float>, int>(capacity);
         }
 
-        public int Count
-        {
-            get { return _list.Count; }
-        }
+        public int Count => _list.Count;
 
         public void Push(BaseObject obj)
         {
-            LinkedListNode<BaseObject> newNode = new(obj); // �½��ڵ�
-            _list.AddLast(newNode); // ���ڵ���ӵ�����β��
-            _dict[obj.Data.CharacterID] = newNode; // ���ڵ���ӵ��ֵ�
+            LinkedListNode<BaseObject> newNode = new(obj);
+            _list.AddLast(newNode);
+            _dict[obj.Data.CharacterID] = newNode;
             Advance(newNode);
         }
 
-        public BaseObject Pop() // ��������ͷ���ڵ��Ӧ����Ϸ���󣬲��Ƴ��ýڵ�
+        public BaseObject Pop()
         {
-            BaseObject obj = _list.First.Value; // ��ȡ����ͷ���ڵ��Ӧ����Ϸ����ID
-            Remove(obj.Position); // �Ƴ��� ID ��Ӧ�Ľڵ�
-            return obj; // ���ظ� ID
+            BaseObject obj = _list.First.Value;
+            Remove(obj.Position);
+            return obj;
         }
-        public BaseObject Top() // ��������ͷ���ڵ��Ӧ����Ϸ����ID
+        public BaseObject Top()
         {
             return _list.First.Value;
         }
-        public void MoveHeadToTail(int Distance)
+        public void MoveHeadToTail(int distance)
         {
+            // TODO 这里应该让游戏对象自己修改 Distance 值
             LinkedListNode<BaseObject> head = _list.First;
-            head.Value.Distance = Distance;
+            head.Value.Distance = distance;
             _list.RemoveFirst();
             _list.AddLast(head);
             Advance(head);
@@ -154,20 +141,20 @@ namespace Tools
             }
         }
 
-        public void Remove(int id) // �Ƴ� ID ��Ӧ�Ľڵ�
+        public void Remove(int id)
         {
             _list.Remove(_dict[id]);
             _dict.Remove(id);
 
         }
 
-        public void Clear() // ����ж�����
+        public void Clear()
         {
             _list.Clear();
             _dict.Clear();
         }
 
-        public Dictionary<int, int> DisplayDict() // ���� (ID <=> �ж�ֵ) ���ֵ䣬�Ѱ��ж�ֵ��������
+        public Dictionary<int, int> DisplayDict()
         {
             Dictionary<int, int> dict = new Dictionary<int, int>();
             foreach (var item in _list)
@@ -177,7 +164,7 @@ namespace Tools
             return dict;
         }
 
-        public override string ToString() // ���������е��ж������ֵ���ַ�����ʾ
+        public override string ToString()
         {
             string str = "";
             Dictionary<int, int> dict = DisplayDict();

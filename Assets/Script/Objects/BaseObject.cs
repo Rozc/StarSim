@@ -39,7 +39,6 @@ namespace Script.Objects
         
         public int Distance;
         
-        // TODO
         public int ActionValue => Distance / (int)(Data.Get("Speed") * 100);
         protected GameManager GM;
         protected UIController UI;
