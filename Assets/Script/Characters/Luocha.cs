@@ -115,8 +115,8 @@ namespace Script.Characters
             // 给自己上一个持续两回合的 Buff，进入 CD
             // 当 Buff 结束时，修改 CD 标记
             // 找到生命值百分比最低的角色
-            
-            Act(AutoSkillData, target, afterIMProcessed: AutoSkillAttachment);
+            if (!_isFieldActive) _currentStackOfAbyssFlower++;
+            Act(AutoSkillData, target, afterIMProcessed: AutoSkillAttachment, afterInteractDone: CheckField);
         }
         private void AutoSkillAttachment()
         {

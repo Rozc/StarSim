@@ -18,11 +18,49 @@ namespace Script.Objects
         [field: SerializeField] public string Name { get; private set; }
         [field: SerializeField] public int Level { get; private set; }
         [field: SerializeField] public BattleType BattleType { get; private set; }
-        [field: SerializeField] public PathType Path { get; private set; }
+        
+        [field: SerializeField] private PathType _path;
+        public PathType Path 
+        {
+            get
+            {
+                if (_path == PathType.None)
+                {
+                    Debug.LogError("You can't get Path of a Enemy! Or there is an error in the data!");
+                    return PathType.None;
+                }
+                else
+                {
+                    return _path;
+                }
+            }
+            private set => _path = value;
+        }
+
+        [field: SerializeField] public List<BattleType> WeaknessList;
+        [field: SerializeField] private int _weaknessValue;
+        public int WeaknessValue
+        {
+            get
+            {
+                if (Path != PathType.None)
+                {
+                    Debug.LogError("You can't get WeaknessValue of a Friendly! Or there is an error in the data!");
+                    return 0;
+                }
+                else
+                {
+                    return _weaknessValue;
+                }
+            }
+            private set => _weaknessValue = value;
+        }
+        
         private Dictionary<string, float> BaseData;
         private Dictionary<string, float> TraceData;
         private Dictionary<string, float> LightConeData;
         private Dictionary<string, float> RelicsData;
+        
         [field: SerializeField] public List<Buff> BuffList;
         private float _healthDiff;
 
@@ -38,7 +76,24 @@ namespace Script.Objects
             Name = data.Name;
             Level = data.Level;
             BattleType = data.BattleType;
-            Path = data.Path;
+            WeaknessList = new List<BattleType>();
+            switch (data)
+            {
+                case FriendlyData fd:
+                    Path = fd.Path;
+                    break;
+                case EnemyData ed:
+                {
+                    Path = PathType.None;
+                    foreach (var bt in ed.WeaknessList)
+                    {
+                        WeaknessList.Add(bt);
+                    }
+                    _weaknessValue = ed.WeaknessValue;
+                    break;
+                }
+            }
+            
             BaseData = PropertyFile.Read(data.PropertyStrings, Path == PathType.None ? 1 : 0);
             TraceData = new Dictionary<string, float>();
             LightConeData = new Dictionary<string, float>();

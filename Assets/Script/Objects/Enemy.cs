@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Script.ActionLogic;
 using Script.Data;
 using Script.Enums;
@@ -11,17 +12,8 @@ namespace Script.Objects
         [field: SerializeField] protected bool RandomTarget;
         [field: SerializeField] protected GameObject PresetTarget = null;
         [field: SerializeField] protected ActionDataBase BasicAttackData;
-        new void Start()
-        {
-            base.Start(); // ���ø����Start����
-        }
 
-        // Update is called once per frame
-        new void Update()
-        {
-            base.Update();
-        }
-
+        
         public override void GetMessageFromGM(Message msg)
         {
             switch (msg)
