@@ -160,7 +160,7 @@ public class GameManager : SingletonBase<GameManager>
     {
         Debug.Log("    Action of " + _currentActionOf.Data.Name + "Canceled");
         _state = GMStatus.WaitingActDone;
-        _actionQ.Pop();
+        _currentAction = _actionQ.Pop();
         _targetSelector.Disable();
         ActionDone();
     }
@@ -201,15 +201,14 @@ public class GameManager : SingletonBase<GameManager>
             return;
         }
         
-        _currentTurnOf.GetMessageFromGM(Message.TurnEnd);
         TurnEnd();
 
     }
 
     private void TurnEnd()
     {
-        Console.WriteLine("In TurnEnd()");
-        _state = GMStatus.Idle; // �� GM ״̬��Ϊ����
+        _currentTurnOf.GetMessageFromGM(Message.TurnEnd);
+        _state = GMStatus.Idle;
         NextTurn();
     }
 
@@ -255,9 +254,9 @@ public class GameManager : SingletonBase<GameManager>
 
         }
     }
-    public BaseObject GetRandomObject(bool Enemy)
+    public BaseObject GetRandomObject(bool enemy)
     {
-        if (Enemy)
+        if (enemy)
         {
             return EnemyObjects[Random.Range(0, EnemyObjects.Count)];
         } else
@@ -338,9 +337,9 @@ public class GameManager : SingletonBase<GameManager>
 
     // ===================================== Private =====================================
 
-    private void TryFriendlyUltimate(int id)
+    private void TryFriendlyUltimate(int pos)
     {
-        (PosDict[id] as Friendly)?.AskUltimate();
+        (PosDict[pos] as Friendly)?.AskUltimate();
     }
     private void EventUpdateTurnQ(BaseObject sender, BaseObject _)
     {
