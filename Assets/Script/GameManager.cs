@@ -34,7 +34,8 @@ public class GameManager : SingletonBase<GameManager>
     private BaseObject _currentTurnOf;
     private BaseObject _currentActionOf;
     private Action _currentAction;
-    private int _currentUAID;
+    private int _currentMaxUAID;
+    private int _currentMaxUniqueID;
     
     public BaseObject CurrentTarget => PosDict[_targetSelector.CurrentPosition];
     
@@ -59,12 +60,16 @@ public class GameManager : SingletonBase<GameManager>
 
         _turnQ = new TurnQueue();
         _actionQ = new ActionQueue();
+        _currentMaxUniqueID = 0;
+        _currentMaxUAID = 0;
 
         UI = GameObject.Find("UIDocument").GetComponent<UIController>();
         EC = EventCenter.Instance;
-
+        
+        
         foreach (var obj in objs)
         {
+            obj.UniqueID = _currentMaxUniqueID++;
             switch (obj)
             {
                 case Friendly friendly:
@@ -75,12 +80,11 @@ public class GameManager : SingletonBase<GameManager>
                     break;
             }
 
-            ObjDict.Add(obj.Data.CharacterID, obj);
+            ObjDict.Add(obj.UniqueID, obj);
             PosDict.Add(obj.Position, obj);
         }
         UI.SetInteractable(ButtonID.BattleStart, false);
-        // TargetCursor.Initialize();
-        // 给所有对象分配光标
+
         GameObject cursorMain = Resources.Load<GameObject>("Prefab/Cursor");
         _targetSelector = new TargetSelector();
         
@@ -139,7 +143,7 @@ public class GameManager : SingletonBase<GameManager>
     {
         Debug.Log("    Into Action of " + _actionQ.Top().Actor.BaseData.Name);
         Action action = _actionQ.Top();
-        _currentActionOf = ObjDict[action.Actor.Data.CharacterID];
+        _currentActionOf = ObjDict[action.Actor.UniqueID];
         // TODO 重写调整 UI 和光标的逻辑
         if (action.ActionType is ActionType.Base or ActionType.Extra)
         {
@@ -298,9 +302,9 @@ public class GameManager : SingletonBase<GameManager>
             return -1;
         }
 
-        action.UAID = _currentUAID;
+        action.UAID = _currentMaxUAID;
         
-        _currentUAID++;
+        _currentMaxUAID++;
         if (_actionQ.Push(action) && _state == GMStatus.WaitingAct)
         {
             Debug.Log("    额外行动插入，现行动打断，执行额外行动");
@@ -308,7 +312,7 @@ public class GameManager : SingletonBase<GameManager>
             _currentActionOf.GetMessageFromGM(Message.Interrupt);
             NextAction();
         }
-        return _currentUAID - 1;
+        return _currentMaxUAID - 1;
     }
     public string GetActQ()
     {
@@ -340,7 +344,7 @@ public class GameManager : SingletonBase<GameManager>
     }
     private void EventUpdateTurnQ(BaseObject sender, BaseObject _)
     {
-        _turnQ.Update(sender.Data.CharacterID);
+        _turnQ.Update(sender.UniqueID);
     }
     
     
@@ -359,8 +363,6 @@ public class GameManager : SingletonBase<GameManager>
                 _targetSelector.Move(false);
                 break;
         }
-        // 当一个目标被选中后，清除所有其他目标的光标，并根据当前的目标形式重设光标
-        
         
     }
     public void SetCursorForm(TargetForm targetForm, TargetSide targetSide)

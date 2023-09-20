@@ -21,7 +21,7 @@ namespace Script.ActionLogic
         {
             LinkedListNode<BaseObject> newNode = new(obj);
             _list.AddLast(newNode);
-            _dict[obj.Data.CharacterID] = newNode;
+            _dict[obj.UniqueID] = newNode;
             Advance(newNode);
         }
 
@@ -159,7 +159,7 @@ namespace Script.ActionLogic
             Dictionary<int, int> dict = new Dictionary<int, int>();
             foreach (var item in _list)
             {
-                dict.Add(item.Data.CharacterID, item.ActionValue);
+                dict.Add(item.UniqueID, item.ActionValue);
             }
             return dict;
         }

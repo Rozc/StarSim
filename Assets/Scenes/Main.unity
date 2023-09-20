@@ -153,6 +153,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
+      propertyPath: Position
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_Name
       value: "\u87FE\u870D"
       objectReference: {fileID: 0}
@@ -167,7 +171,7 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: BasicAttackData
       value: 
-      objectReference: {fileID: 11400000, guid: 2f4f474d466d82a408ea4a92b36ffedf, type: 2}
+      objectReference: {fileID: 11400000, guid: 8df44aba7fa13c9479be478ac11b74a3, type: 2}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_TargetObject
       value: 
@@ -183,7 +187,7 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: <BaseData>k__BackingField
       value: 
-      objectReference: {fileID: 11400000, guid: 6850bc912ea01db4696cd47654a5b980, type: 2}
+      objectReference: {fileID: 11400000, guid: f8c52dd707c61e844a063e75f8db2f0d, type: 2}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: <Position>k__BackingField
       value: 6
@@ -460,6 +464,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
+      propertyPath: Position
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_Name
       value: "\u91D1\u9C7C"
       objectReference: {fileID: 0}
@@ -474,7 +482,7 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: BasicAttackData
       value: 
-      objectReference: {fileID: 11400000, guid: 2f4f474d466d82a408ea4a92b36ffedf, type: 2}
+      objectReference: {fileID: 11400000, guid: 8df44aba7fa13c9479be478ac11b74a3, type: 2}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_TargetObject
       value: 
@@ -490,7 +498,7 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: <BaseData>k__BackingField
       value: 
-      objectReference: {fileID: 11400000, guid: 48f1a664fc32d6847be664e399882644, type: 2}
+      objectReference: {fileID: 11400000, guid: f8c52dd707c61e844a063e75f8db2f0d, type: 2}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: <Position>k__BackingField
       value: 10
@@ -744,17 +752,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 461de8269c2243028085ff3037c1a8af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BaseData>k__BackingField: {fileID: 11400000, guid: fbedc1b0b4875e0419b55ff8ff01fa8e, type: 2}
-  <Data>k__BackingField:
-    <CharacterID>k__BackingField: 0
-    <Name>k__BackingField: 
-    <Level>k__BackingField: 0
-    <BattleType>k__BackingField: 0
-    <Path>k__BackingField: 0
-    BuffList: []
-  _cachedBuffList: []
+  <BaseData>k__BackingField: {fileID: 11400000, guid: cb92b172114343e4c8da578c7d164762, type: 2}
+  _receivedBuffList: []
   isAlive: 1
-  <Position>k__BackingField: 2
+  Position: 2
+  UniqueID: 0
   _currentAction:
     UAID: 0
     Actor: {fileID: 0}
@@ -764,16 +766,16 @@ MonoBehaviour:
     ExtraActCode: 0
   MovingState: 0
   Distance: 0
-  <BasicAttackData>k__BackingField: {fileID: 11400000, guid: 1cbdf53c58a92f945bdf0faf7c45fccc, type: 2}
-  <SkillAttackData>k__BackingField: {fileID: 11400000, guid: ce3cd46cd69ee7c4ea658e1b32e65080, type: 2}
-  <UltimateData>k__BackingField: {fileID: 11400000, guid: 187911d71ae97334e8b8be311834746d, type: 2}
+  <BasicAttackData>k__BackingField: {fileID: 11400000, guid: 7782276bb13f5e342aaef4953bdbf3ef, type: 2}
+  <SkillAttackData>k__BackingField: {fileID: 11400000, guid: d44a2884f0b0a6846b055f7d62fd68c5, type: 2}
+  <UltimateData>k__BackingField: {fileID: 11400000, guid: eb89721fbf4ff984e8bf5245f816de31, type: 2}
   CommandState: 0
-  FieldDeployData: {fileID: 11400000, guid: 54d59d1db9a2fca4684b0dd4cf29abc3, type: 2}
-  FieldDeployOtherData: {fileID: 11400000, guid: bd58673b18b1b7b409c9fdc5726631f2, type: 2}
-  AutoSkillData: {fileID: 11400000, guid: 6dece924435a4e946b2f13f9a114c347, type: 2}
-  AutoSkillCDData: {fileID: 11400000, guid: a87c38eb55cd03f459046d1cf1f9004c, type: 2}
-  FieldHealMainData: {fileID: 11400000, guid: b0abf1d1628034d4581a0f3b7171f2d9, type: 2}
-  FieldHealOtherData: {fileID: 11400000, guid: 69f55fd047a23784eaea69092ffa76e4, type: 2}
+  FieldDeployData: {fileID: 11400000, guid: e59037c366826464e90243ef84cae0ae, type: 2}
+  FieldDeployOtherData: {fileID: 11400000, guid: 52b2664a17ebf2a45ac3f54ff2da64f4, type: 2}
+  AutoSkillData: {fileID: 11400000, guid: a88918a8472268a44ab142167a951c52, type: 2}
+  AutoSkillCDData: {fileID: 11400000, guid: 1e2621059d4b3104da39eeabdbe48e8c, type: 2}
+  FieldHealMainData: {fileID: 11400000, guid: c8c27185ae243154fb44a82bccb657be, type: 2}
+  FieldHealOtherData: {fileID: 11400000, guid: cb5aaa473a85ced41a59276e8a1b32cc, type: 2}
   _currentStackOfAbyssFlower: 0
   _isFieldActive: 0
   _isAutoSkillInCD: 0
@@ -864,6 +866,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
+      propertyPath: Position
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_Name
       value: "\u868A\u5B50"
       objectReference: {fileID: 0}
@@ -878,7 +884,7 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: BasicAttackData
       value: 
-      objectReference: {fileID: 11400000, guid: 2f4f474d466d82a408ea4a92b36ffedf, type: 2}
+      objectReference: {fileID: 11400000, guid: 8df44aba7fa13c9479be478ac11b74a3, type: 2}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_TargetObject
       value: 
@@ -894,7 +900,7 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: <BaseData>k__BackingField
       value: 
-      objectReference: {fileID: 11400000, guid: 8d1cbc1d09c08304aac976984d5e5f33, type: 2}
+      objectReference: {fileID: 11400000, guid: 26326b329b35c5c4489443153c139dd8, type: 2}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: <Position>k__BackingField
       value: 7
@@ -1023,17 +1029,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39192aca4feb41989fb119f266f7ebf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BaseData>k__BackingField: {fileID: 11400000, guid: 02aad0ad6bb25ec43966b37336a2ab20, type: 2}
-  <Data>k__BackingField:
-    <CharacterID>k__BackingField: 0
-    <Name>k__BackingField: 
-    <Level>k__BackingField: 0
-    <BattleType>k__BackingField: 0
-    <Path>k__BackingField: 0
-    BuffList: []
-  _cachedBuffList: []
+  <BaseData>k__BackingField: {fileID: 11400000, guid: 18139ebdf92fda640bd4e76102de8e67, type: 2}
+  _receivedBuffList: []
   isAlive: 1
-  <Position>k__BackingField: 3
+  Position: 3
+  UniqueID: 0
   _currentAction:
     UAID: 0
     Actor: {fileID: 0}
@@ -1043,11 +1043,11 @@ MonoBehaviour:
     ExtraActCode: 0
   MovingState: 0
   Distance: 0
-  <BasicAttackData>k__BackingField: {fileID: 11400000, guid: 9986ada4d6b45bc4ca470ca9496867b2, type: 2}
-  <SkillAttackData>k__BackingField: {fileID: 11400000, guid: e937d56d148822c40913239b517a7b69, type: 2}
-  <UltimateData>k__BackingField: {fileID: 11400000, guid: b9929ee8b19469d43bf8176de2eb5942, type: 2}
+  <BasicAttackData>k__BackingField: {fileID: 11400000, guid: f1779e2f5509f1e46b10276b05c373da, type: 2}
+  <SkillAttackData>k__BackingField: {fileID: 11400000, guid: 74669e5a44389e64cb77b465e432282d, type: 2}
+  <UltimateData>k__BackingField: {fileID: 11400000, guid: 9d89e2305d0875545add0257bfece727, type: 2}
   CommandState: 0
-  SkillCallBackAction: {fileID: 11400000, guid: 9dd7c7d23ef4833499e8e153d3a7190f, type: 2}
+  SkillCallBackAction: {fileID: 11400000, guid: f738695bd1e1be04296bc7d1a261a3dd, type: 2}
 --- !u!1001 &1495505093
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1123,17 +1123,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7404131786be0342986121bb72f7a2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BaseData>k__BackingField: {fileID: 11400000, guid: 1844d82c507708948af1d89ab1648bfd, type: 2}
-  <Data>k__BackingField:
-    <CharacterID>k__BackingField: 0
-    <Name>k__BackingField: 
-    <Level>k__BackingField: 0
-    <BattleType>k__BackingField: 0
-    <Path>k__BackingField: 0
-    BuffList: []
-  _cachedBuffList: []
+  <BaseData>k__BackingField: {fileID: 11400000, guid: 9e49805652b2c754aa009c833b573aa0, type: 2}
+  _receivedBuffList: []
   isAlive: 1
-  <Position>k__BackingField: 4
+  Position: 4
+  UniqueID: 0
   _currentAction:
     UAID: 0
     Actor: {fileID: 0}
@@ -1143,16 +1137,16 @@ MonoBehaviour:
     ExtraActCode: 0
   MovingState: 0
   Distance: 0
-  <BasicAttackData>k__BackingField: {fileID: 11400000, guid: d3b90462c5c43504ca201525a95e1623, type: 2}
-  <SkillAttackData>k__BackingField: {fileID: 11400000, guid: c7920082dcf1cd944ae4ec47ac9d720d, type: 2}
-  <UltimateData>k__BackingField: {fileID: 11400000, guid: 1c7a46a0b9bb1aa4696e64eafc86f677, type: 2}
+  <BasicAttackData>k__BackingField: {fileID: 11400000, guid: e6d0467ebaf4ee546ac51765cbad4bda, type: 2}
+  <SkillAttackData>k__BackingField: {fileID: 11400000, guid: a30704e0899842f46b8af4aa6f227ef5, type: 2}
+  <UltimateData>k__BackingField: {fileID: 11400000, guid: 5c697283c9d4c5c4987c7e501c95c0fa, type: 2}
   CommandState: 0
   Jades: 00000000000000000000000000000000
   HiddenHand: 0
-  EnhancedBasicAttackData: {fileID: 11400000, guid: b4a36c25bb9dab541be45d9dc5ac1fa2, type: 2}
-  HiddenHandData: {fileID: 11400000, guid: 18d0c6a3e0a194a479eff41937375e23, type: 2}
-  AutarkyBasicData: {fileID: 11400000, guid: 6736ad96175b9c74283590ea4a3fd279, type: 2}
-  AutarkyEnhancedData: {fileID: 11400000, guid: 817bfd4ba99dc034abef2292230d006c, type: 2}
+  EnhancedBasicAttackData: {fileID: 11400000, guid: 40ef97f0101ec1348b62ec0c1ec96bb6, type: 2}
+  HiddenHandData: {fileID: 11400000, guid: c13e79cab5103334f8d2e7119288c970, type: 2}
+  AutarkyBasicData: {fileID: 11400000, guid: 3a800fe8ac938e3489e4316b29d76d58, type: 2}
+  AutarkyEnhancedData: {fileID: 11400000, guid: e807195c1c9feac4290bc43b9b5c1562, type: 2}
 --- !u!1 &1545050020 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1470077304936829578, guid: 53f9b39d04c36e24080bd1c4b1a4397f, type: 3}
@@ -1188,6 +1182,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
+      propertyPath: Position
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_Name
       value: "\u6C38\u51AC\u707E\u5F71"
       objectReference: {fileID: 0}
@@ -1202,7 +1200,7 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: BasicAttackData
       value: 
-      objectReference: {fileID: 11400000, guid: 2f4f474d466d82a408ea4a92b36ffedf, type: 2}
+      objectReference: {fileID: 11400000, guid: 8df44aba7fa13c9479be478ac11b74a3, type: 2}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_TargetObject
       value: 
@@ -1218,7 +1216,7 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: <BaseData>k__BackingField
       value: 
-      objectReference: {fileID: 11400000, guid: e5edfa8d835cb084eb1718813eb52f17, type: 2}
+      objectReference: {fileID: 11400000, guid: 5a1dbf60c9ef9ed4f8a80db652e5cd49, type: 2}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: <Position>k__BackingField
       value: 8
@@ -1290,17 +1288,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3e794766803c0b43954553f94d96e5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <BaseData>k__BackingField: {fileID: 11400000, guid: 031263e0fd35f9f44b5ec84a528edfab, type: 2}
-  <Data>k__BackingField:
-    <CharacterID>k__BackingField: 0
-    <Name>k__BackingField: 
-    <Level>k__BackingField: 0
-    <BattleType>k__BackingField: 0
-    <Path>k__BackingField: 0
-    BuffList: []
-  _cachedBuffList: []
+  <BaseData>k__BackingField: {fileID: 11400000, guid: 4c9385ffaab4f28418cbb05172d623a2, type: 2}
+  _receivedBuffList: []
   isAlive: 1
-  <Position>k__BackingField: 1
+  Position: 1
+  UniqueID: 0
   _currentAction:
     UAID: 0
     Actor: {fileID: 0}
@@ -1310,16 +1302,16 @@ MonoBehaviour:
     ExtraActCode: 0
   MovingState: 0
   Distance: 0
-  <BasicAttackData>k__BackingField: {fileID: 11400000, guid: c7e19f7b6adb6594f879970355c9d6d6, type: 2}
-  <SkillAttackData>k__BackingField: {fileID: 11400000, guid: 32226d099a93d87479e168bec6fef775, type: 2}
-  <UltimateData>k__BackingField: {fileID: 11400000, guid: 3e9ea125e2c3f1e41a2d8c0db1143753, type: 2}
+  <BasicAttackData>k__BackingField: {fileID: 11400000, guid: 8c323497092ceec4693b09342f607e99, type: 2}
+  <SkillAttackData>k__BackingField: {fileID: 11400000, guid: 15dfbde64da0cbb4290e53d6b1b97869, type: 2}
+  <UltimateData>k__BackingField: {fileID: 11400000, guid: dfb2f0ed9efe3354f90fb122709a4a58, type: 2}
   CommandState: 0
   enhancedCounterCount: 0
   counterTarget: {fileID: 0}
-  counterData: {fileID: 11400000, guid: c452b2ccdf4081d4eb05316316fa3d9a, type: 2}
-  enhancedCounterData: {fileID: 11400000, guid: db7a04828cbaa4048b259008c68bc3d0, type: 2}
-  skillOnFlagData: {fileID: 11400000, guid: c8ad8043e0903df48b307b2171dabf37, type: 2}
-  OnSpawnBuffActionData: {fileID: 11400000, guid: d0f527819aa8f574ca02d019c2eaad7e, type: 2}
+  counterData: {fileID: 11400000, guid: 285870d96a6527044be7322f01e215d9, type: 2}
+  enhancedCounterData: {fileID: 11400000, guid: 0317fc792322fec4f8a1c07b996eee77, type: 2}
+  skillOnFlagData: {fileID: 11400000, guid: 2df2720db586e6a4eac50b2de57815cb, type: 2}
+  OnSpawnBuffActionData: {fileID: 11400000, guid: 583bb3db99cc59d48b5faeb378c2be18, type: 2}
 --- !u!1 &1908942969
 GameObject:
   m_ObjectHideFlags: 0
@@ -1375,6 +1367,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
+      propertyPath: Position
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_Name
       value: "\u7535\u952F\u4EBA"
       objectReference: {fileID: 0}
@@ -1393,7 +1389,7 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: BasicAttackData
       value: 
-      objectReference: {fileID: 11400000, guid: 2f4f474d466d82a408ea4a92b36ffedf, type: 2}
+      objectReference: {fileID: 11400000, guid: 8df44aba7fa13c9479be478ac11b74a3, type: 2}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: Test_TargetObject
       value: 
@@ -1409,7 +1405,7 @@ PrefabInstance:
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: <BaseData>k__BackingField
       value: 
-      objectReference: {fileID: 11400000, guid: 3df180e1ac213c34a8e13e1051ed5d30, type: 2}
+      objectReference: {fileID: 11400000, guid: 26326b329b35c5c4489443153c139dd8, type: 2}
     - target: {fileID: 5700688228394416388, guid: 335aea610c86ea44f8f687feebe38100, type: 3}
       propertyPath: <Position>k__BackingField
       value: 9

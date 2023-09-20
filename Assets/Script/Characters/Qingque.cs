@@ -25,9 +25,8 @@ namespace Script.Characters
         [field: SerializeField] private ActionDataBase AutarkyBasicData;
         [field: SerializeField] private ActionDataBase AutarkyEnhancedData;
 
-        private new void Start()
+        private Qingque()
         {
-            base.Start();
             Jades = new int[] {0, 0, 0, 0};
         }
         

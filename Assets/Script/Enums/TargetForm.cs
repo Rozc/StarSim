@@ -7,5 +7,6 @@ namespace Script.Enums
         Blast,
         Bounce,
         Aoe,
+        AoeMainSub,
     }
 }

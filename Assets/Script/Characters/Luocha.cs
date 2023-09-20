@@ -67,9 +67,7 @@ namespace Script.Characters
         private void DeployField()
         {
             _isFieldActive = true;
-            // 给自己上一个持续两回合的 Buff
-            // 给自己以外的队友上一个不随回合减少的 Buff
-            // 当自己的 Buff 结束时，移除队友身上的这个 Buff
+
             Act(FieldDeployData, this, afterIMProcessed: DeployFieldAttachment);
         }
 

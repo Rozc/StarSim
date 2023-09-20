@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Script.BuffLogic;
 using Script.Enums;
 using Script.Objects;
@@ -30,7 +29,14 @@ namespace Script.InteractLogic
             {
                 case TargetForm.Single:
                     SingleBuff(ad);
-                    SingleDamage(ad);
+                    if (ad.Data.SkillType is SkillType.Attack or SkillType.Impair)
+                    {
+                        SingleDamage(ad);
+                    } else if (ad.Data.SkillType is SkillType.Restore)
+                    {
+                        SingleHealing(ad);
+                    }
+                    
                     break;
                 case TargetForm.Aoe:
                     Aoe(ad);
@@ -38,7 +44,7 @@ namespace Script.InteractLogic
             }
         }
 
-        private void SingleBuff(ActionDetail ad, bool isDelegate = false)
+        private void SingleBuff(ActionDetail ad, bool isDelegate = false, bool main = true)
         {
 
             switch (ad.Data.RemoveA)
@@ -57,13 +63,15 @@ namespace Script.InteractLogic
             {
                 ad.Target.RemoveTheBuff(buffData);
             }
+
+            var buffDataList = main ? ad.Data.BuffDataMain : ad.Data.BuffDataSub;
             
-            if (ad.Data.BuffDataList.Length > 0)
+            if (buffDataList.Length > 0)
             {
-                Buff[] buffs = new Buff[ad.Data.BuffDataList.Length];
-                for (var i = 0; i < ad.Data.BuffDataList.Length; i++)
+                Buff[] buffs = new Buff[buffDataList.Length];
+                for (var i = 0; i < buffDataList.Length; i++)
                 {
-                    var buffData = ad.Data.BuffDataList[i];
+                    var buffData = buffDataList[i];
                     // 命中概率计算
                     var probability = buffData.Probability;
                     if (!buffData.FixedProbability)
@@ -91,17 +99,17 @@ namespace Script.InteractLogic
                             continue;
                         }
                         // 计算buff值
-                        if (! ToValue(prop.valueBasedOn, ad.Actor, ad.Target, prop.propName, prop.value, out var value))
+                        if (! BuffPropToValue(prop.valueBasedOn, ad.Actor, ad.Target, prop.propName, prop.value, out var value))
                         {
                             continue;
                         }
                         // UpperBound
-                        if (ToValue(prop.maxBasedOn, ad.Actor, ad.Target, prop.maxPropName, prop.max, out var max))
+                        if (BuffPropToValue(prop.maxBasedOn, ad.Actor, ad.Target, prop.maxPropName, prop.max, out var max))
                         {
                             value = Mathf.Min(value, max);
                         }
                         // LowerBound
-                        if (ToValue(prop.minBasedOn, ad.Actor, ad.Target, prop.minPropName, prop.min, out var min))
+                        if (BuffPropToValue(prop.minBasedOn, ad.Actor, ad.Target, prop.minPropName, prop.min, out var min))
                         {
                             value = Mathf.Max(value, min);
                         }
@@ -125,21 +133,84 @@ namespace Script.InteractLogic
             if (!isDelegate) ad.Target.ApplyBuff();
         }
 
-        private void SingleDamage(ActionDetail ad)
+        private void SingleDamage(ActionDetail ad, bool main = true)
         {
-            switch (ad.Data.SkillType)
+            // Case Damage, TODO Case Restore
+            float multiple = main ? ad.Data.Multiple : ad.Data.MultipleSub;
+            float basedValue = ad.Actor.Data.Get(ad.Data.MultipleBasedOn);
+            float fixedValue = main ? ad.Data.FixedValue : ad.Data.FixedValueSub;
+            float boost = CalculateBoost(ad);
+            float reduce = CalculateReduce(ad) ;
+            float resist = CalculateResistance(ad);
+            float defence = CalculateDefence(ad);
+            
+            // TODO 易伤
+            
+            float raw = (basedValue * multiple + fixedValue) * boost * reduce * resist * defence;
+            
+            if (Random.Range(0f, 99.99f) < ad.Actor.Data.Get("CritRate"))
             {
-                // TODO 处理伤害数值计算
-                case SkillType.Attack:
-                    ad.Target.ReceiveDamage(1, ad.Actor, !ad.Data.NotAnDiscreteAction);
-                    break;
-                case SkillType.Restore:
-                    ad.Target.ReceiveHealing(1, ad.Actor, !ad.Data.NotAnDiscreteAction);
-                    break;
+                // 暴击
+                raw *= 1 + (ad.Actor.Data.Get("CritDamage") * 0.01f);
             }
+            
+            ad.Target.ReceiveDamage(raw, ad.Actor, ad.Data.TriggerEvent, ad.Data.WeaknessBreak);
         }
 
-        private bool ToValue(
+        private void SingleHealing(ActionDetail ad, bool main = true)
+        {
+            float multiple = main ? ad.Data.Multiple : ad.Data.MultipleSub;
+            float basedValue = ad.Actor.Data.Get(ad.Data.MultipleBasedOn);
+            float fixedValue = main ? ad.Data.FixedValue : ad.Data.FixedValueSub;
+            float boost = ad.Actor.Data.Get("HealingBoost");
+            
+            float raw = (basedValue * multiple + fixedValue) * boost;
+            ad.Target.ReceiveHealing(raw, ad.Actor, ad.Data.TriggerEvent);
+        }
+
+
+        private float CalculateBoost(ActionDetail ad)
+        {
+            float result = 100;
+            result += ad.Actor.Data.Get("DamageBoostAll");
+            result += ad.Actor.Data.Get("DamageBoost" + ad.Data.DamageType.ToString());
+            result += ad.Actor.Data.Get("DamageBoost" + ad.Actor.Data.BattleType.ToString());
+            return result * 0.01f;
+        }
+        private float CalculateReduce(ActionDetail ad)
+        {
+            float result = 100;
+            result -= ad.Target.Data.Get("DamageReductionAll");
+            result -= ad.Target.Data.Get("DamageReduction" + ad.Data.DamageType.ToString());
+            result -= ad.Target.Data.Get("DamageReduction" + ad.Actor.Data.BattleType.ToString());
+            return result * 0.01f;
+        }
+        private float CalculateResistance(ActionDetail ad)
+        {
+            float result = 100;
+            result -= ad.Target.Data.Get("ResistanceAll");
+            result -= ad.Target.Data.Get("Resistance" + ad.Data.DamageType.ToString());
+            result -= ad.Target.Data.Get("Resistance" + ad.Actor.Data.BattleType.ToString());
+
+            result += ad.Actor.Data.Get("ResistancePenetrationAll");
+            result += ad.Actor.Data.Get("ResistancePenetration" + ad.Data.DamageType.ToString());
+            result += ad.Actor.Data.Get("ResistancePenetration" + ad.Actor.Data.BattleType.ToString());
+            return result * 0.01f;
+        }
+        private float CalculateDefence(ActionDetail ad)
+        {
+            float a = ad.Actor.Data.Level * 10 + 200;
+            float b = ad.Target.Data.Level * 10 + 200;
+            float c = ad.Actor.Data.Get("DefencePenetration");
+            c += ad.Actor.Data.Get("DefencePenetration" + ad.Data.DamageType.ToString());
+            c += ad.Actor.Data.Get("DefencePenetration" + ad.Actor.Data.BattleType.ToString());
+            b = b * (1f - c * 0.01f);
+            float result = a / (a + b);
+            return result;
+        }
+
+
+        private bool BuffPropToValue(
             BuffValueBase baseOn, 
             BaseObject sender, 
             BaseObject target, 
@@ -171,9 +242,11 @@ namespace Script.InteractLogic
                     return false;
             }
         }
+        
+        
         private void Blast(ActionDetail ad)
         {
-            
+            var adCenter = new ActionDetail(ad.Actor, ad.Target, ad.Data);
         }
         private void Bounce(ActionDetail ad)
         {
@@ -197,5 +270,18 @@ namespace Script.InteractLogic
             foreach (var add in ads) SingleDamage(add);
 
         }
+
+        /*private float DamageCalc(ActionDetail ad, bool main = true)
+        {
+            float result = 0;
+
+            switch (ad.Data.TargetForm)
+            {
+                case TargetForm.Single:
+                    result = 
+            }
+            
+            return result;
+        }*/
     }
 }

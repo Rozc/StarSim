@@ -21,8 +21,8 @@ namespace Script.Objects
         // TODO 光锥数据和遗器数据
         
         // Realtime Data
-        [field: SerializeField] public RealtimeData Data { get; private set; }
-        [FormerlySerializedAs("CachedBuffList")] [field: SerializeField] public List<Buff> _cachedBuffList;
+        [field: SerializeField] public RealtimeData Data { get; protected set; }
+        [field: SerializeField] public List<Buff> _receivedBuffList;
         [field: SerializeField] public bool isAlive = true;
         
 
@@ -30,9 +30,10 @@ namespace Script.Objects
         protected Vector3 primitivePosition; 
         protected Vector3 primitiveRotation; 
         protected BaseObject _target; 
-        protected Vector3 movingTargetPosition; 
-    
-        [field: SerializeField] public int Position { get; private set; }
+        protected Vector3 movingTargetPosition;
+
+        [field: SerializeField] public int Position;
+        [field: SerializeField] public int UniqueID;
         [field: SerializeField] protected Action _currentAction;
         
         [field: SerializeField] protected MovingStatus MovingState = MovingStatus.Idle;
@@ -51,7 +52,6 @@ namespace Script.Objects
 
         protected void MoveTo(Vector3 TargetPosition, float StopDistance)
         {
-            // ��Ŀ���ƶ����� StopDistance ��Χ��ֹͣ
             if (Vector3.Distance(transform.position, TargetPosition) > StopDistance)
             {
                 transform.LookAt(TargetPosition);
@@ -90,7 +90,6 @@ namespace Script.Objects
             EC = EventCenter.Instance;
             UI = GameObject.Find("UIDocument").GetComponent<UIController>();
             IM = InteractManager.Instance;
-            Data = new RealtimeData(BaseData);
 
 
             MovingState = MovingStatus.Idle;
@@ -205,16 +204,15 @@ namespace Script.Objects
         
         
         // ====================================== Damage ======================================
-        public virtual void ReceiveDamage(float value, BaseObject actor, bool trigger = true)
+        public virtual void ReceiveDamage(float value, BaseObject actor, bool trigger = true, int weakness = 0)
         {
-            // Data...
-            // TODO Data...
+            Data.CurrentHealth -= value;
             if (trigger) EC.TriggerEvent(EventID.ObjectOnHit, this, actor);
+            
         }
         public virtual void ReceiveHealing(float value, BaseObject actor, bool trigger = true)
         {
-            // Data...
-            // TODO Data...
+            Data.CurrentHealth += value;
             if (trigger) EC.TriggerEvent(EventID.ObjectOnHeal, this, actor);
         }
         
@@ -271,17 +269,15 @@ namespace Script.Objects
         {
             foreach (var buff in buffs)
             {
-                _cachedBuffList.Add(buff);
+                _receivedBuffList.Add(buff);
             }
         }
 
         public virtual void ApplyBuff()
         {
-            foreach (var buff in _cachedBuffList)
+            foreach (var buff in _receivedBuffList)
             {
-                // Done: 检查身上是否已有该 Buff，如果有，检查是否可叠加，如果可叠加则叠加，否则仅更新持续时间
-                // 有些 Buff 叠层之后效果也会叠加，考虑去掉原来的 Buff 然后加一个新的？
-                // 要保证添加 Buff 和移除 Buff 是一个互补的操作
+
                 if (buff is null) continue;
                 // 对速度和距离做特殊处理, 需要在 UI 体现，并且距离的影响是即时的，且在 Buff 移除时也不会返还
                 // 或者说 距离本就不是 Buff，行动提前/延后只是对对象的一种瞬时操作。
@@ -310,7 +306,7 @@ namespace Script.Objects
                 if (buff.PropertyDict.ContainsKey("Speed")) 
                     EC.TriggerEvent(EventID.ActionValueUpdate, this, buff.Caster);
             }
-            _cachedBuffList.Clear();
+            _receivedBuffList.Clear();
             
         }
         protected void RemoveBuff(Buff buff)
@@ -457,8 +453,7 @@ namespace Script.Objects
         {
             if (a is null && b is null) return true;
             if (a is null || b is null) return false;
-            return (a.Data.CharacterID == b.Data.CharacterID)
-                   && (a.Position == b.Position);
+            return a.UniqueID == b.UniqueID;
         }
         public static bool operator !=(BaseObject a, BaseObject b)
         {

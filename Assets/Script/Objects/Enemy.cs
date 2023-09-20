@@ -12,7 +12,13 @@ namespace Script.Objects
         [field: SerializeField] protected bool RandomTarget;
         [field: SerializeField] protected GameObject PresetTarget = null;
         [field: SerializeField] protected ActionDataBase BasicAttackData;
+        [field: SerializeField] public bool IsWeaknessBroken;
 
+        new void Start()
+        {
+            Data = new RTEnemyData(BaseData as EnemyData);
+            base.Start();
+        }
         
         public override void GetMessageFromGM(Message msg)
         {
@@ -44,6 +50,34 @@ namespace Script.Objects
             // 默认实现占位符
 
             DoAnimation(SkillType.Attack, TargetForm.Single);
+        }
+
+        protected override void OnActionBegin()
+        {
+            base.OnActionBegin();
+            if (IsWeaknessBroken && Data is RTEnemyData data)
+            {
+                data.WeaknessValue = data.MaxWeaknessValue;
+                Debug.Log(Data.Name + "recovered from weakness broken!");
+                IsWeaknessBroken = false;
+            }
+        }
+
+        public override void ReceiveDamage(float value, BaseObject actor, bool trigger = true, int weakness = 0)
+        {
+            base.ReceiveDamage(value, actor, trigger, weakness);
+            if (trigger && Data is RTEnemyData data)
+            {
+                if (data.WeaknessList.Contains(actor.Data.BattleType))
+                {
+                    data.WeaknessValue -= weakness;
+                    if (data.WeaknessValue <= 0)
+                    {
+                        IsWeaknessBroken = true;
+                        Debug.Log(Data.Name + "oh no! my weakness is broken!");
+                    }
+                }
+            }
         }
     }
 }

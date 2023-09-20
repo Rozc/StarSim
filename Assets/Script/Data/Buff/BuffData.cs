@@ -12,28 +12,36 @@ namespace Script.Data
         [field: SerializeField] public string BuffName { get; protected set; }
         [field: SerializeField] public string Description { get; protected set; }
         
+        [field: Space(10)]
         [field: SerializeField] public BuffType BuffType { get; protected set; }
         [field: SerializeField] public bool TriggerAtTurnBegin { get; protected set; }
         [field: SerializeField] public bool DurationBaseOnTurn { get; protected set; }
         [field: SerializeField] public int Duration { get; protected set; }
+        
+        [field: Space(10)]
         [field: SerializeField] public bool Stackable { get; protected set; }
         [field: SerializeField] public int StackAtATime { get; protected set; } = 1;
         [field: SerializeField] public int MaxStack { get; protected set; } = 1;       
         [field: SerializeField] public bool NeedToBeRemovedFirst { get; protected set; }
 
+        [field: Space(10)]
         [field: SerializeField] public bool CheckAtTurnBegin { get; protected set; }
         [field: SerializeField] public bool CheckAtMainActionEnd { get; protected set; }
         [field: SerializeField] public bool MustBeRemovedAtTurnEnd { get; protected set; }
 
+        [field: Space(10)]
         [field: SerializeField] public bool FixedProbability { get; protected set; } = true;
         [field: SerializeField] public float Probability { get; protected set; } = 100;
         
         
         // TODO: Add Icon 
         
+        [field: Space(10)]
         [field: SerializeField] public bool HasCallBack { get; protected set; }
         [field: SerializeField] public string[] CallBackList { get; protected set; }
         [field: SerializeField] public string OnRemove { get; protected set; }
+        
+        [field: Space(10)]
         [field: SerializeField] public bool HasProperty { get; protected set; }
         [field: SerializeField] public BuffProperty[] BuffPropertyList { get; protected set; }
     }

@@ -16,6 +16,12 @@ namespace Script.Objects
         
         [field: SerializeField] protected CommandStatus CommandState;
 
+        new void Start()
+        {
+            Data = new RTFriendlyData(BaseData as FriendlyData);
+            base.Start();
+        }
+        
         protected override void OnTurnBegin()
         {
             base.OnTurnBegin();

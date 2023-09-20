@@ -28,8 +28,9 @@ MonoBehaviour:
   <CheckAtMainActionEnd>k__BackingField: 0
   <MustBeRemovedAtTurnEnd>k__BackingField: 1
   <FixedProbability>k__BackingField: 1
-  <Probability>k__BackingField: 100
+  <Probability>k__BackingField: 24
   <HasCallBack>k__BackingField: 0
   <CallBackList>k__BackingField: []
+  <OnRemove>k__BackingField: 
   <HasProperty>k__BackingField: 0
   <BuffPropertyList>k__BackingField: []
